@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Gastronomía en Catacaos</title>
+<title>PIQAJAMA · Un reto gastronómico en Catacaos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito+Sans:ital,wght@0,400;0,600;0,800;1,400&display=swap" rel="stylesheet">
@@ -64,16 +64,39 @@
     box-shadow:0 6px 16px rgba(63,33,12,.25);
     padding:10px 12px;
   }
-  #hud-left{top:24px;left:14px;min-width:148px}
-  #hud-left .lbl{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);font-weight:800}
-  #hud-left .count{font-family:'Baloo 2';font-weight:800;font-size:30px;line-height:1;color:var(--terracotta)}
-  #hud-left .count small{font-size:15px;color:var(--ink-soft)}
-  #rango{font-family:'Baloo 2';font-weight:700;font-size:15px;margin-top:4px;color:var(--ink)}
-  #hearts{display:flex;gap:3px;margin-top:8px;font-size:16px;line-height:1}
-  #hearts .h{filter:saturate(1.1)}
-  #hearts .h.lost{filter:grayscale(1) opacity(.32)}
+  #hud-left{top:18px;left:14px;min-width:0;width:max-content;padding:8px 11px;
+    background:linear-gradient(180deg,rgba(255,247,232,.96),rgba(253,236,203,.96));}
+  .hud-top{display:flex;align-items:center;gap:8px}
+  .rmedal{font-size:21px;line-height:1}
+  .hud-top-txt{display:flex;flex-direction:column;line-height:1.1}
+  .rank-name{font-family:'Baloo 2';font-weight:800;font-size:13px;color:var(--ink)}
+  .stat-sub{font-size:10.5px;color:var(--ink-soft);font-weight:800}
+  .stat-sub b{color:var(--terracotta);font-size:12px}
 
-  #hud-right{top:24px;right:14px;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+  /* Barra de rango fina con muescas */
+  .rank-bar{position:relative;height:8px;border-radius:5px;overflow:hidden;margin-top:6px;
+    background:repeating-linear-gradient(90deg,#e3d0ab 0 1px,#ecdcbd 1px 22px);
+    border:1.5px solid #c9a36a;box-shadow:inset 0 1px 2px rgba(90,55,20,.22)}
+  .rank-fill{position:absolute;top:0;bottom:0;left:0;width:0;border-radius:4px;
+    background:linear-gradient(180deg,#f9dd7e,#e8a13c 60%,#c25b3a);
+    box-shadow:0 0 7px rgba(232,161,60,.6);transition:width .55s cubic-bezier(.34,1.3,.5,1)}
+  .rank-bar .tick{position:absolute;top:0;width:2px;height:100%;background:rgba(122,63,34,.3);z-index:2}
+
+  /* Una sola fila: vidas | picanterías */
+  .hud-icons{display:flex;align-items:center;gap:9px;margin-top:8px}
+  .ico-group{display:inline-flex;gap:3px;align-items:center}
+  .ico-group .lbl{font-size:11px;margin-right:1px;filter:grayscale(.1)}
+  .ico-sep{width:1px;height:16px;background:rgba(201,163,106,.7)}
+  .seg{line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.16));
+    transition:transform .25s ease, filter .25s ease, opacity .25s ease}
+  #lifeSeg .seg{font-size:15px}
+  #lifeSeg .seg.spent{filter:grayscale(1) opacity(.2);transform:scale(.78)}
+  #lifeSeg.low .seg:last-child:not(.spent){animation:lifePulse .7s ease-in-out infinite}
+  @keyframes lifePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+  #picSeg .seg{font-size:13px;opacity:.3;filter:grayscale(.7)}
+  #picSeg .seg.done{opacity:1;filter:none;transform:scale(1.08)}
+
+  #hud-right{position: absolute;;top:18px;right:14px;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
   .btn{
     pointer-events:auto;cursor:pointer;border:none;
     font-family:'Baloo 2';font-weight:700;
@@ -100,11 +123,35 @@
 
   /* ---------- Overlays ---------- */
   .overlay{
-    position:absolute;inset:0;z-index:8;display:none;
-    align-items:center;justify-content:center;padding:20px;
+    position:absolute;inset:0;z-index:8;
+    display:flex;align-items:center;justify-content:center;padding:20px;
     background:rgba(43,22,10,.55);backdrop-filter:blur(2px);
+    opacity:0;visibility:hidden;pointer-events:none;
+    transition:opacity .34s ease, visibility .34s ease;
   }
-  .overlay.show{display:flex}
+  .overlay.show{opacity:1;visibility:visible;pointer-events:auto}
+  .overlay .panel{
+    transform:translateY(14px) scale(.97);opacity:.4;
+    transition:transform .38s cubic-bezier(.2,1,.4,1), opacity .34s ease;
+  }
+  .overlay.show .panel{transform:none;opacity:1}
+  #book{z-index:14}              /* el recetario siempre por encima (incluido el menú final) */
+
+  /* Pantalla completa (no modal): para menú y cómo jugar */
+  .overlay.screen{
+    background:linear-gradient(180deg,#f3b85f 0%, #e09a45 100%);
+    background-size:cover;background-position:center;
+    backdrop-filter:none;padding:24px;
+  }
+  .overlay.screen::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(180deg, rgba(43,22,10,.18) 0%, rgba(43,22,10,.5) 100%);
+  }
+  .overlay.screen .panel{
+    position:relative;z-index:1;
+    background:rgba(255,247,232,.92);
+    box-shadow:0 20px 50px rgba(20,10,0,.4);
+  }
   .panel{
     width:min(620px,100%);max-height:100%;overflow:auto;
     background:linear-gradient(180deg,#fff7e8,#fdeccb);
@@ -117,6 +164,67 @@
   h1{font-size:clamp(30px,5vw,46px)}
   .panel p{color:var(--ink-soft);line-height:1.5}
   .lead{font-size:16px}
+
+  /* Pantalla de contexto / historia */
+  .story-title{margin:.15em 0}
+  .story{text-align:left;background:#fff;border:2px dashed #c98a4f;border-radius:14px;padding:14px 18px;margin:14px 0}
+  .story p{margin:9px 0;color:var(--ink);line-height:1.62;font-size:15px}
+  .story p:first-child{margin-top:0}
+  .story p:last-child{margin-bottom:0}
+  .story-foot{font-family:'Baloo 2';font-weight:700;color:var(--teal-deep);margin:2px 0 0}
+
+  /* Marca PIQAJAMA */
+  .brand{font-size:clamp(44px,9vw,76px);letter-spacing:.04em;line-height:.92;margin:.05em 0 0;
+    background:linear-gradient(180deg,#e8552f 0%, #c25b3a 45%, #d98a2b 100%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    text-shadow:0 3px 0 rgba(122,63,34,.18);filter:drop-shadow(0 4px 6px rgba(194,91,58,.25))}
+  .tagline{font-family:'Baloo 2';font-weight:700;font-size:clamp(15px,2.6vw,19px);
+    color:var(--teal-deep);margin:2px 0 6px}
+
+  /* Lienzo de efectos (confeti / globos) */
+  #fx{position:absolute;inset:0;width:100%;height:100%;z-index:40;pointer-events:none;background:transparent}
+
+  /* Puertas de la picantería */
+  #doors{position:absolute;inset:0;z-index:30;pointer-events:none;display:none}
+  #doors.active{display:block}
+  .door{position:absolute;top:0;bottom:0;width:50.5%;
+    background:
+      repeating-linear-gradient(90deg, rgba(0,0,0,.10) 0 2px, transparent 2px 38px),
+      linear-gradient(180deg,#9c5a2e,#7a4322);
+    box-shadow:inset 0 0 60px rgba(0,0,0,.35);
+    will-change:transform}
+  .door::before{content:"";position:absolute;inset:14px;border:4px solid rgba(0,0,0,.18);border-radius:8px;
+    box-shadow:inset 0 0 0 6px rgba(255,220,160,.08)}
+  .door-l{left:0;border-right:3px solid #5e3318}
+  .door-r{right:0;border-left:3px solid #5e3318}
+  .door .knob{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;
+    background:radial-gradient(circle at 35% 35%,#ffe6a8,#caa24a);box-shadow:0 1px 3px rgba(0,0,0,.4)}
+  .door-l .knob{right:12px;transform:translateY(-50%)}
+  .door-r .knob{left:12px;transform:translateY(-50%)}
+
+  /* Opción seleccionada (antes de comprobar) */
+  .opt.selected{border-color:var(--teal);background:#eafaf8;box-shadow:0 0 0 3px rgba(26,163,155,.18);transform:translateY(-1px)}
+  .opt.selected .num{background:var(--teal);color:#fff}
+
+  /* Botón comprobar */
+  .submit-row{margin-top:14px;display:flex;justify-content:center}
+  .submit-btn{background:var(--terracotta);border-color:#8f3c22;box-shadow:0 4px 0 #8f3c22;min-width:230px}
+  .submit-btn:active{box-shadow:0 1px 0 #8f3c22}
+  .submit-btn:disabled{opacity:.5;cursor:not-allowed;filter:grayscale(.3);transform:none;box-shadow:0 4px 0 #8f3c22}
+
+  /* Suspenso */
+  .suspense{display:none;flex-direction:column;align-items:center;gap:8px;margin-top:18px}
+  .suspense.show{display:flex;animation:slideUp .25s ease}
+  .suspense .pot{font-size:54px;animation:potShake .5s ease-in-out infinite}
+  .susp-media{display:flex;align-items:center;justify-content:center;min-height:60px}
+  .susp-img,.susp-video{display:none;max-width:200px;max-height:150px;border-radius:14px;
+    box-shadow:0 8px 20px rgba(63,33,12,.22)}
+  @keyframes potShake{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+  .susp-text{font-family:'Baloo 2';font-weight:800;font-size:17px;color:var(--ink)}
+  .dots i{opacity:.2;animation:dot 1.2s infinite}
+  .dots i:nth-child(2){animation-delay:.2s}
+  .dots i:nth-child(3){animation-delay:.4s}
+  @keyframes dot{0%,80%,100%{opacity:.2}40%{opacity:1}}
 
   .howto{text-align:left;background:#fff;border:2px dashed #c98a4f;border-radius:14px;padding:14px 16px;margin:16px 0}
   .howto h3{font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
@@ -143,7 +251,7 @@
     display:flex;align-items:center;justify-content:center;position:relative}
   .plate-emoji,.plate-img{transition:filter .5s ease, transform .4s ease}
   .plate-emoji{font-size:74px;line-height:1}
-  .plate-img{width:120px;height:120px;border-radius:50%;object-fit:cover;display:none}
+  .plate-img{width:120px;object-fit:cover;display:none}
   .silhouette{filter:brightness(0) saturate(0);transform:scale(.96)}
   .revealed{filter:none;transform:scale(1)}
   .reveal-badge{position:absolute;top:-6px;right:-6px;font-size:30px;display:none;
@@ -180,13 +288,14 @@
   .info-card .row{display:flex;gap:8px;margin:6px 0;font-size:14px;line-height:1.45}
   .info-card .row b{flex:0 0 92px;color:var(--terracotta);font-family:'Baloo 2'}
   .info-card .row span{color:var(--ink)}
+  .info-card .fb-text{font-size:14px;line-height:1.55;color:var(--ink);margin:0;text-align:left}
 
   /* ---------- Book ---------- */
   #book .panel{text-align:left}
   .book-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
   .book-item{display:flex;gap:14px;background:#fff;border:1.5px solid #e0bd8c;border-radius:12px;padding:12px 14px}
   .book-item .be{font-size:42px;line-height:1;flex:0 0 auto;width:54px;text-align:center;align-self:center}
-  .book-item .be img{width:54px;height:54px;border-radius:10px;object-fit:cover;display:block}
+  .book-item .be img{width:54px;border-radius:10px;object-fit:cover;display:block}
   .book-item .bt{flex:1}
   .book-item .bt .name{font-family:'Baloo 2';font-weight:800;font-size:17px;display:flex;align-items:center;gap:8px}
   .book-item .bt .tag{font-size:11px;font-weight:800;border-radius:999px;padding:2px 9px}
@@ -225,14 +334,35 @@
 <body>
 <div id="stage">
   <canvas id="game" width="960" height="600"></canvas>
+  <canvas id="fx"></canvas>
+
+  <!-- Puertas (animación al entrar/salir de una picantería) -->
+  <div id="doors" aria-hidden="true">
+    <div class="door door-l"><span class="knob"></span></div>
+    <div class="door door-r"><span class="knob"></span></div>
+  </div>
 
   <!-- HUD -->
   <div id="hud">
     <div class="hud-card" id="hud-left">
-      <div class="lbl">Platos adivinados</div>
-      <div class="count"><span id="aciertos">0</span><small>/10</small></div>
-      <div id="rango">Rango: Forastero</div>
-      <div id="hearts" aria-label="Vidas restantes"></div>
+      <div class="hud-top">
+        <span class="rmedal" id="rangoMedal">🧭</span>
+        <div class="hud-top-txt">
+          <span class="rank-name" id="rangoNombre">Forastero</span>
+          <span class="stat-sub"><b id="aciertos">0</b>/10 platos</span>
+        </div>
+      </div>
+      <div class="rank-bar">
+        <div class="rank-fill" id="rankFill"></div>
+        <i class="tick" style="left:30%"></i>
+        <i class="tick" style="left:60%"></i>
+        <i class="tick" style="left:80%"></i>
+      </div>
+      <div class="hud-icons">
+        <span class="ico-group" id="lifeSeg" title="Vidas"></span>
+        <span class="ico-sep"></span>
+        <span class="ico-group" id="picSeg" title="Picanterías completadas"></span>
+      </div>
     </div>
     <div id="hud-right">
       <button class="btn alt" id="bookBtn">📖 Recetario</button>
@@ -254,21 +384,38 @@
   </div>
 
   <!-- MENU -->
-  <div class="overlay show" id="menu">
+  <div class="overlay screen show" id="menu">
     <div class="panel">
-      <div class="eyebrow">Explorador gastronómico · Piura</div>
-      <h1>Gastronomía en Catacaos</h1>
+      <h1 class="brand">PIQAJAMA</h1>
+      <p class="tagline">Un reto gastronómico en Catacaos</p>
       <p class="lead">Recorre 5 picanterías de la Plaza de Catacaos y descubre los platos que son patrimonio vivo de la cocina cataquense. Cada plato escondido es una pista por resolver.</p>
-      <div class="menu-art">🍽️ 🌶️ 🐟 🍮</div>
       <div class="actions">
-        <button class="btn" id="startBtn">Comenzar recorrido</button>
+        <button class="btn" id="startBtn">Comenzar reto</button>
         <button class="btn ghost" id="howtoBtn">Cómo jugar</button>
       </div>
     </div>
   </div>
 
+  <!-- INTRO / CONTEXTO -->
+  <div class="overlay screen" id="intro">
+    <div class="panel">
+      <div class="eyebrow">Tu historia · Día 1 en Catacaos</div>
+      <h2 class="story-title">🌅 Bienvenido a Catacaos</h2>
+      <div class="story">
+        <p>Acabas de bajar del mototaxi en plena <b>Plaza de Catacaos</b>. El sol del norte aprieta y, desde cada esquina, llega el aroma del culantro, la chicha de jora y el pescado fresco.</p>
+        <p>Eres <b>nuevo en el pueblo</b> y te han contado que aquí, en sus <b>picanterías</b>, se guarda el verdadero sabor de Piura. Cada local esconde sus propios secretos servidos en el plato.</p>
+        <p>Hoy te propones un reto: recorrer las <b>5 picanterías</b> de la plaza y descubrir, bocado a bocado, los platos que son patrimonio de esta tierra. ¿Llegarás a convertirte en todo un <b>Cataquero de pura cepa</b>?</p>
+      </div>
+      <p class="story-foot">Tu recorrido empieza ahora. 🥘</p>
+      <div class="actions">
+        <button class="btn" id="startGameBtn">Empezar recorrido</button>
+        <button class="btn ghost" id="introBack">Volver</button>
+      </div>
+    </div>
+  </div>
+
   <!-- HOW TO PLAY (pantalla aparte) -->
-  <div class="overlay" id="howto">
+  <div class="overlay screen" id="howto">
     <div class="panel">
       <div class="eyebrow">Guía rápida</div>
       <h2>🧭 Cómo jugar</h2>
@@ -277,8 +424,8 @@
         <ul>
           <li><span class="ic">🕹️</span><div>Muévete con <span class="key">W A S D</span> o las <span class="key">flechas</span>.</div></li>
           <li><span class="ic">🚪</span><div>Acércate a la picantería que brilla y pulsa <span class="key">E</span> o <span class="key">Espacio</span> para entrar.</div></li>
-          <li><span class="ic">🍽️</span><div>En cada picantería verás 2 platos en silueta. Lee las pistas y elige el nombre correcto entre 3 opciones.</div></li>
-          <li><span class="ic">✅</span><div>Si aciertas, sumas el plato a tu recorrido. Si fallas, conoces igual la respuesta y pierdes una vida.</div></li>
+          <li><span class="ic">🍽️</span><div>En cada picantería verás 2 platos en silueta. Lee las pistas, elige una opción y pulsa <span class="key">Comprobar respuesta</span> (o <span class="key">Enter</span>) para confirmar.</div></li>
+          <li><span class="ic">✅</span><div>Si aciertas, lo celebramos con confeti 🎉. Si fallas, conoces igual la respuesta y pierdes una vida.</div></li>
           <li><span class="ic">📖</span><div>Cada plato cataquense queda guardado en tu <b>Recetario</b>, lo aciertes o no.</div></li>
           <li><span class="ic">❤️</span><div>Tienes <b>5 vidas</b>. Al sexto error termina el recorrido.</div></li>
         </ul>
@@ -310,9 +457,19 @@
         <img class="plate-img" id="plateImg" alt="" />
         <span class="reveal-badge" id="revealBadge">✅</span>
       </div>
-      <p style="margin:6px 0 2px;font-weight:800;color:var(--ink-soft)">¿Qué plato cataquense es?</p>
-      <ul class="hints" id="hints"></ul>
+      <p style="margin:10px 0 2px;font-weight:800;color:var(--ink-soft)">¿Qué plato cataquense es?</p>
       <div class="options" id="options"></div>
+      <div class="submit-row" id="submitRow">
+        <button class="btn submit-btn" id="submitBtn" disabled>Comprobar respuesta</button>
+      </div>
+      <div class="suspense" id="suspense">
+        <div class="susp-media">
+          <div class="pot" id="suspPot">🍲</div>
+          <img class="susp-img" id="suspGif" alt="" />
+          <video class="susp-video" id="suspVideo" muted playsinline loop></video>
+        </div>
+        <div class="susp-text" id="suspText">Probando el sabor<span class="dots"><i>.</i><i>.</i><i>.</i></span></div>
+      </div>
       <div class="feedback" id="feedback">
         <div class="fb-banner" id="fbBanner"></div>
         <div class="info-card" id="infoCard"></div>
@@ -331,7 +488,7 @@
       <p style="margin-top:2px">Platos descubiertos durante tu recorrido.</p>
       <div id="bookGrid" class="book-grid"></div>
       <div class="actions">
-        <button class="btn ghost" id="closeBook">Volver al recorrido</button>
+        <button class="btn ghost" id="closeBook">Cerrar recetario</button>
       </div>
     </div>
   </div>
@@ -379,6 +536,21 @@ const ASSETS = {
   // --- MAPA (foto de la plaza) ---
   map: "",                 // p.ej. "img/plaza-catacaos.jpg"
 
+  // --- FONDO DEL MENÚ (imagen de la pantalla de inicio y de "Cómo jugar") ---
+  menu: {
+    background: ""         // p.ej. "img/fondo-menu.jpg"
+  },
+
+  // --- PICANTERÍAS (una imagen por local, en orden 1..5) ---
+  // El número, el candado/visto y el cartel se dibujan encima de tu imagen.
+  picanterias: [
+    { image:"" },          // 1 · La Chayo
+    { image:"" },          // 2 · Las Tradiciones
+    { image:"" },          // 3 · El Algarrobo
+    { image:"" },          // 4 · La Cumbianera
+    { image:"" }           // 5 · Doña Tula
+  ],
+
   // --- PERSONAJE ---
   player: {
     image: "",             // p.ej. "img/explorador.png" (PNG con fondo transparente recomendado)
@@ -387,18 +559,27 @@ const ASSETS = {
     flip: true             // voltear horizontalmente al ir a la izquierda
   },
 
+  // --- LOADER DE SUSPENSO (lo que se muestra mientras se "comprueba" la respuesta) ---
+  // Prioridad: video > gif > animación por defecto (la olla 🍲).
+  suspense: {
+    video: "",             // p.ej. "img/cargando.mp4" o "...webm" (se reproduce en bucle, sin sonido)
+    gif: "",               // p.ej. "img/cargando.gif" (también admite PNG/JPG)
+    text: "Probando el sabor", // texto bajo el loader (déjalo vacío "" para ocultarlo)
+    duration: 1500         // duración del suspenso en milisegundos
+  },
+
   // --- PLATOS (la clave debe coincidir EXACTO con el nombre del plato) ---
   dishes: {
-    "Seco de Chabelo":       { image:"", silhouette:"" },
-    "Malarrabia":            { image:"", silhouette:"" },
-    "Copús":                 { image:"", silhouette:"" },
-    "Tamales Verdes":        { image:"", silhouette:"" },
-    "Majado de Yuca":        { image:"", silhouette:"" },
-    "Cabrito a la Norteña":  { image:"", silhouette:"" },
-    "Sudado de Pescado":     { image:"", silhouette:"" },
-    "Caldo de Novios":       { image:"", silhouette:"" },
-    "Cebiche de Caballa":    { image:"", silhouette:"" },
-    "Natilla Piurana":       { image:"", silhouette:"" }
+    "Seco de Chavelo":            { image:"src/platos/1.png", silhouette:"src/platos/1_n.png" },
+    "Majado de Yuca":             { image:"src/platos/2.png", silhouette:"src/platos/2_n.png" },
+    "Ceviche de Caballa":         { image:"src/platos/3.png", silhouette:"src/platos/3_n.png" },
+    "Ceviche de Conchas Negras":  { image:"src/platos/4.png", silhouette:"src/platos/4_n.png" },
+    "Malarrabia":                 { image:"src/platos/5.png", silhouette:"src/platos/5_n.png" },
+    "Sudado de Pescado":          { image:"src/platos/6.png", silhouette:"src/platos/6_n.png" },
+    "Arroz con Mariscos":         { image:"src/platos/7.png", silhouette:"src/platos/7_n.png" },
+    "Cabrito":                    { image:"src/platos/8.png", silhouette:"src/platos/8_n.png" },
+    "Cachema Encebollada":        { image:"src/platos/9.png", silhouette:"src/platos/9_n.png" },
+    "Pasado por Agua Caliente":   { image:"src/platos/10.png", silhouette:"src/platos/10_n.png" }
   }
 };
 
@@ -425,79 +606,91 @@ function drawImageCover(im, dx, dy, dw, dh){
   ctx.drawImage(im, sx, sy, sw, sh, dx, dy, dw, dh);
 }
 
+/* Dibuja una imagen ajustada (contain) dentro de un rectángulo, centrada y sin recortar. */
+function drawImageContain(im, dx, dy, dw, dh){
+  const ir = im.naturalWidth/im.naturalHeight, dr = dw/dh;
+  let w, h;
+  if(ir > dr){ w = dw; h = dw/ir; } else { h = dh; w = dh*ir; }
+  ctx.drawImage(im, dx+(dw-w)/2, dy+(dh-h), w, h); // base alineada abajo
+}
+
 /* =========================================================
-   DATOS — Platos cataquenses (correctos) + distractores
+   DATOS — Platos de la tabla (con retroalimentación del documento)
+   Orden = de mayor a menor facilidad (encaja con el desbloqueo).
+   fbOk  = retroalimentación al acertar
+   fbBad = retroalimentación correctiva al fallar
+   book  = resumen corto para el recetario
    ========================================================= */
 const DISHES = [
-  { name:"Seco de Chabelo", emoji:"🍖",
-    hints:["Es el plato bandera de Catacaos.","Lleva plátano verde majado y carne seca de res.","Su aderezo se realza con chicha de jora."],
-    origen:"Catacaos, Piura",
-    ingredientes:"Plátano verde majado, carne seca de res (cecina), chicha de jora, culantro y ají.",
-    relevancia:"El plato más emblemático de Catacaos; insignia de la mesa norteña.",
-    options:["Seco de Chabelo","Lomo Saltado","Tacacho con Cecina"] },
-
-  { name:"Malarrabia", emoji:"🍌",
-    hints:["Tradicional de los viernes de Cuaresma.","Combina plátano maduro con pescado guisado.","Se acompaña con frijoles y arroz."],
-    origen:"Piura",
-    ingredientes:"Plátano maduro sancochado, pescado salado, frijoles, queso y arroz.",
-    relevancia:"Plato cuaresmal ligado a la fe y a la cocina familiar piurana.",
-    options:["Malarrabia","Causa Limeña","Juane de Gallina"] },
-
-  { name:"Copús", emoji:"🍲",
-    hints:["Se cocina bajo tierra, en un horno de barro sellado.","Reúne cabrito, gallina y chancho en una sola olla.","Su cocción lenta dura varias horas."],
-    origen:"Catacaos",
-    ingredientes:"Cabrito, gallina, chancho, plátano, camote y chicha, cocidos bajo tierra.",
-    relevancia:"Preparación ancestral de festividades; expresión viva de la cocina cataquense.",
-    options:["Copús","Pachamanca","Anticuchos"] },
-
-  { name:"Tamales Verdes", emoji:"🫔",
-    hints:["Su color verde viene del culantro molido.","Se envuelven en hoja de plátano.","Son el desayuno clásico de los fines de semana."],
-    origen:"Norte del Perú / Piura",
-    ingredientes:"Masa de maíz con culantro, relleno de cerdo o gallina, en hoja de plátano.",
-    relevancia:"Infaltables en los desayunos cataquenses de domingo.",
-    options:["Tamales Verdes","Humita Dulce","Juane de Gallina"] },
+  { name:"Seco de Chavelo", emoji:"🍖",
+    hints:["Es todo un emblema de las picanterías de Catacaos.","Combina plátano verde majado con carne seca o cecina.","Nació cuando un campesino improvisó la comida para sus compañeros de chacra."],
+    fbOk:`¡Excelente! Has identificado correctamente el Seco de Chavelo, uno de los platos más emblemáticos de las picanterías. Se prepara con plátano verde asado y majado, carne seca o cecina, cebolla y especias. Su origen está ligado a la historia de un campesino llamado Chabelo, quien se dispuso a dar de comer a sus compañeros de trabajo: tomó algunos ingredientes que tenía, entre ellos el plátano (seco), y comenzó a hacer un aderezo junto con la chicha. De ahí nace el nombre "El Seco de Chabelo".`,
+    fbBad:`Este plato se llama Seco de Chavelo. Se reconoce por su preparación a base de plátano verde asado y majado mezclado con carne seca y condimentos. Es uno de los platos más representativos de la gastronomía cataquense y una visita obligada en las picanterías tradicionales.`,
+    book:`Plátano verde asado y majado con carne seca; el plato insignia de Catacaos.`,
+    far:["Lomo Saltado","Ají de Gallina"], near:["Tacacho con Cecina","Cabrito a la Norteña"] },
 
   { name:"Majado de Yuca", emoji:"🍠",
-    hints:["La yuca sancochada se machaca o 'maja'.","Se sirve con crujiente chicharrón de chancho.","Es un desayuno contundente del norte."],
-    origen:"Piura",
-    ingredientes:"Yuca majada, chicharrón de cerdo y zarza de cebolla.",
-    relevancia:"Desayuno robusto que abre las mañanas de mercado en Catacaos.",
-    options:["Majado de Yuca","Papa a la Huancaína","Causa Limeña"] },
+    hints:["Es un desayuno contundente de la cocina popular piurana.","Su base es yuca cocida y machacada.","Se sirve con chicharrón y entra en la 'Ronda criolla'."],
+    fbOk:`¡Muy bien! Has reconocido el Majado de Yuca, una preparación tradicional elaborada con yuca cocida y machacada, generalmente acompañada de chicharrón o carne. Es un plato muy apreciado en la cocina popular piurana por su sencillez y sabor.`,
+    fbBad:`¡Gua! La respuesta correcta es Majado de Yuca. Este plato se prepara machacando yuca cocida hasta obtener una textura suave que suele acompañarse con carnes y salsas típicas de la región. También se encuentra dentro de la llamada "Ronda criolla". Probarlo es una buena excusa para conocer más picanterías.`,
+    book:`Yuca cocida y machacada, servida con chicharrón o carne; parte de la "Ronda criolla".`,
+    far:["Papa a la Huancaína","Causa Limeña"], near:["Chicharrón con Yuca","Tacacho con Cecina"] },
 
-  { name:"Cabrito a la Norteña", emoji:"🍛",
-    hints:["Su protagonista es la tierna carne de cabra.","Se marina en chicha de jora y culantro.","Se acompaña con frijoles y arroz."],
-    origen:"Norte del Perú",
-    ingredientes:"Cabrito, chicha de jora, culantro, ají, frijoles y yuca.",
-    relevancia:"Plato de fiesta en las picanterías norteñas, símbolo de celebración.",
-    options:["Cabrito a la Norteña","Rocoto Relleno","Ají de Gallina"] },
+  { name:"Ceviche de Caballa", emoji:"🐟",
+    hints:["Es un plato marino curtido en limón.","Usa un pescado azul de carne oscura y sabor intenso.","Se sirve con cancha, camote y cebolla; el pez es de carne firme y oscura."],
+    fbOk:`¡Excelente! Has identificado correctamente el Ceviche de Caballa, un pescado azul reconocido por su intenso sabor y alto valor nutricional. Se prepara con limón, cebolla roja, ají y culantro, ingredientes que realzan su frescura. En distintas regiones del Perú existen versiones con otros pescados como cachema, bonito o mero, pero la caballa destaca por su sabor característico y su importancia en la cocina costera.`,
+    fbBad:`¡No te preocupes! El nombre correcto es Ceviche de Caballa. Se reconoce por usar caballa fresca marinada en jugo de limón y acompañada de cebolla, ají y otros ingredientes tradicionales del ceviche peruano. Su carne oscura y sabor intenso lo diferencian de otros ceviches de pescado blanco. Ahora que lo conoces, será mucho más fácil identificarlo la próxima vez.`,
+    book:`Pescado azul marinado en limón, de carne oscura y sabor intenso.`,
+    far:["Lomo Saltado","Arroz con Pollo"], near:["Ceviche de Conchas Negras","Tiradito de Pescado"] },
 
-  { name:"Sudado de Pescado", emoji:"🐟",
-    hints:["El pescado se cocina al vapor en su propio jugo.","Lleva tomate, cebolla y chicha de jora.","Se sirve bien caliente, con caldo aromático."],
-    origen:"Costa norte",
-    ingredientes:"Pescado fresco, tomate, cebolla, ají y chicha de jora.",
-    relevancia:"Cocina de caleta: aprovecha la pesca fresca del litoral piurano.",
-    options:["Sudado de Pescado","Parihuela","Chupe de Camarones"] },
+  { name:"Ceviche de Conchas Negras", emoji:"🦪",
+    hints:["Es un ceviche de intenso sabor marino.","No lleva pescado, sino un molusco de color oscuro.","Ese molusco se extrae de los manglares del norte."],
+    fbOk:`¡Correcto! Has identificado el Ceviche de Conchas Negras, uno de los platos más valorados de la gastronomía norteña. Se prepara con conchas negras frescas, limón, cebolla y ají. Su intenso sabor marino lo convierte en una experiencia culinaria única.`,
+    fbBad:`Este plato es un Ceviche de Conchas Negras. A diferencia del ceviche tradicional de pescado, utiliza conchas negras, un molusco extraído principalmente de los manglares del norte peruano.`,
+    book:`Ceviche de conchas negras de los manglares del norte, de fuerte sabor marino.`,
+    far:["Ají de Gallina","Lomo Saltado"], near:["Ceviche de Caballa","Ceviche Mixto"] },
 
-  { name:"Caldo de Novios", emoji:"🥣",
-    hints:["Tradicionalmente se servía en las bodas.","Es un caldo sustancioso de gallina o res.","Su nombre nace de los festejos de matrimonio."],
-    origen:"Piura",
-    ingredientes:"Gallina o res, verduras, especias y un toque de chicha.",
-    relevancia:"Caldo ceremonial que acompañaba las celebraciones nupciales cataquenses.",
-    options:["Caldo de Novios","Sancochado","Aguadito de Pollo"] },
+  { name:"Malarrabia", emoji:"🍌",
+    hints:["Es un plato tradicional ligado a fechas religiosas.","Mezcla plátano maduro con queso fresco y cebolla.","Se prepara sobre todo en Semana Santa, en Piura."],
+    fbOk:`¡Muy bien! Has reconocido la Malarrabia, un plato tradicional asociado especialmente a la Semana Santa en Piura. Se elabora con plátano maduro, queso fresco y una salsa a base de cebolla. Su nombre tiene diversas interpretaciones populares y representa una importante tradición culinaria de la región.`,
+    fbBad:`No exactamente. Este plato es la Malarrabia, una preparación típica piurana hecha principalmente con plátano maduro, queso fresco y aderezo criollo. Es uno de los platos más representativos de la cocina tradicional de Catacaos.`,
+    book:`Plátano maduro con queso fresco y salsa de cebolla; tradicional de Semana Santa.`,
+    far:["Tacu Tacu","Causa Limeña"], near:["Tacacho con Cecina","Frito a la Piurana"] },
 
-  { name:"Cebiche de Caballa", emoji:"🐠",
-    hints:["Pescado azul curtido en jugo de limón.","Se acompaña con cancha, camote y cebolla.","Muy popular por la pesca abundante del norte."],
-    origen:"Costa piurana",
-    ingredientes:"Caballa fresca, limón, cebolla, ají limo, culantro, camote y cancha.",
-    relevancia:"Variante norteña del cebiche, sabrosa y base de la dieta costera.",
-    options:["Cebiche de Caballa","Tiradito Nikkei","Conchitas a la Parmesana"] },
+  { name:"Sudado de Pescado", emoji:"🐠",
+    hints:["Es un plato marino caliente, de cuchara.","El pescado se cocina al vapor de sus propios jugos.","Lleva tomate, cebolla y especias en un caldo aromático."],
+    fbOk:`¡Correcto! El Sudado de Pescado es una preparación muy popular en la costa peruana. Se cocina al vapor de sus propios jugos junto con tomate, cebolla y especias, logrando un caldo lleno de sabor.`,
+    fbBad:`La respuesta correcta es Sudado de Pescado. Su principal característica es la cocción lenta del pescado en un caldo aromático elaborado con verduras y condimentos.`,
+    book:`Pescado cocido al vapor de sus jugos con tomate y cebolla, de caldo aromático.`,
+    far:["Lomo Saltado","Ají de Gallina"], near:["Pasado por Agua Caliente","Parihuela"] },
 
-  { name:"Natilla Piurana", emoji:"🍮",
-    hints:["Es un dulce espeso color caramelo.","Se cocina removiendo por horas con chancaca.","Se elabora con leche de cabra."],
-    origen:"Piura",
-    ingredientes:"Leche de cabra, chancaca, harina y clavo de olor.",
-    relevancia:"Postre insignia de Piura, presente en ferias y fiestas patronales.",
-    options:["Natilla Piurana","Suspiro Limeño","Mazamorra Morada"] },
+  { name:"Arroz con Mariscos", emoji:"🍤",
+    hints:["Es un plato marino festivo y muy popular.","Combina arroz sazonado con una variedad de mariscos.","Lleva calamar, pulpo, conchas y langostinos."],
+    fbOk:`¡Muy bien! Has reconocido el Arroz con Mariscos. Esta preparación combina arroz sazonado con una variedad de mariscos como calamar, pulpo, conchas, langostinos y choros, junto con ajíes, culantro y especias que le aportan su característico color y sabor.`,
+    fbBad:`¡Buen intento! Pero la respuesta correcta es Arroz con Mariscos. Se distingue por su color intenso y la abundante mezcla de mariscos incorporados al arroz durante la cocción. Es una de las preparaciones más populares de la cocina marina peruana y suele servirse con salsa criolla o limón.`,
+    book:`Arroz sazonado con calamar, pulpo, conchas y langostinos; color y sabor intensos.`,
+    far:["Lomo Saltado","Ají de Gallina"], near:["Arroz con Pato","Chaufa de Mariscos"] },
+
+  { name:"Cabrito", emoji:"🍛",
+    hints:["Es un plato de fiesta del norte peruano.","Su carne se cocina marinada y a fuego lento.","Lleva chicha de jora y culantro; tiene un color verdoso."],
+    fbOk:`¡Excelente! Has identificado correctamente el Cabrito, uno de los platos más emblemáticos del norte del Perú. Se prepara con carne de cabrito marinada y cocinada lentamente en una salsa de chicha de jora, culantro, ajíes y especias, lo que le otorga un sabor profundo y característico. En Piura, Lambayeque y La Libertad existen variantes, cada una con sus acompañamientos, como arroz, frejoles o yuca.`,
+    fbBad:`¡Creo que debes visitar más picanterías! Este plato se llama Cabrito. Es una preparación tradicional del norte peruano con carne de cabrito cocinada a fuego lento junto con culantro, chicha de jora y diversos condimentos. Su color verdoso y su aroma característico lo convierten en uno de los platos más representativos de la gastronomía norteña.`,
+    book:`Carne de cabrito cocida a fuego lento con chicha de jora y culantro; color verdoso.`,
+    far:["Ceviche Mixto","Causa Limeña"], near:["Seco de Res","Adobo de Cerdo"] },
+
+  { name:"Cachema Encebollada", emoji:"🧅",
+    hints:["Es un plato de pescado, pero no es un ceviche.","El pescado va cocido y cubierto con una salsa caliente.","El pescado va cubierto con abundante cebolla y tomate."],
+    fbOk:`¡Excelente! Has identificado correctamente la Cachema Encebollada, un plato tradicional de las picanterías elaborado con cachema, un pescado muy apreciado en Piura por su sabor y textura. Se prepara cocinando el pescado y cubriéndolo con una generosa salsa de cebolla, tomate, ají y especias.`,
+    fbBad:`¡No te preocupes! La respuesta correcta es Cachema Encebollada. Se prepara con cachema cocida y una salsa caliente a base de cebolla, tomate y condimentos. A diferencia del ceviche —que marina pescado crudo en limón—, aquí el pescado va cocido y con salsa caliente, lo que le da una textura y sabor completamente distintos.`,
+    book:`Cachema cocida cubierta con salsa caliente de cebolla y tomate.`,
+    far:["Lomo Saltado","Causa Limeña"], near:["Pescado a lo Macho","Sudado de Pescado"] },
+
+  { name:"Pasado por Agua Caliente", emoji:"🍲",
+    hints:["Es un plato de pescado costeño, suave y casero.","El pescado se cuece en un caldo ligero y aromático.","No usa limón crudo: su protagonista es el caldo."],
+    fbOk:`¡Excelente! Has identificado correctamente el Pasado por Agua Caliente, uno de los platos más tradicionales de la gastronomía piurana. Consiste en pescado cocido en un caldo ligero y aromático con cebolla, tomate, ají y especias. Es apreciado por resaltar el sabor natural del pescado y por formar parte de la cocina cotidiana de las familias costeras.`,
+    fbBad:`¡Buen intento! La respuesta correcta es Pasado por Agua Caliente. Este plato piurano usa pescado cocido en un caldo caliente con ingredientes frescos y condimentos locales. Puede confundirse con el sudado o el ceviche, pero se diferencia porque su protagonista es el caldo ligero que acompaña al pescado, sin la acidez del limón ni salsas concentradas.`,
+    book:`Pescado cocido en caldo ligero con cebolla y ají, sin acidez de limón.`,
+    far:["Lomo Saltado","Ají de Gallina"], near:["Sudado de Pescado","Caldo de Bolas"] },
 ];
 
 const PICANTERIAS = [
@@ -516,6 +709,8 @@ const MAX_LIVES = 5;
    ========================================================= */
 const cvs = document.getElementById('game');
 const ctx = cvs.getContext('2d');
+const fxCanvas = document.getElementById('fx');
+const fxctx = fxCanvas.getContext('2d');
 const W = cvs.width, H = cvs.height;
 
 const NODES = [
@@ -565,6 +760,10 @@ window.addEventListener('keydown', e=>{
     const btn = document.querySelectorAll('#options .opt')[idx];
     if(btn && !btn.disabled && challenge.active && !challenge.answered) btn.click();
   }
+  // Enter para comprobar la respuesta
+  if(e.code==='Enter' && challenge.active && !challenge.answered && challenge.selectedName){
+    e.preventDefault(); submitAnswer();
+  }
 });
 window.addEventListener('keyup', e=>{ if(KEYMAP[e.code]) keys[KEYMAP[e.code]] = false; });
 
@@ -597,15 +796,29 @@ function tryInteract(){
 function $(id){ return document.getElementById(id); }
 function showOverlay(id){ $(id).classList.add('show'); overlayOpen=true; }
 function hideOverlay(id){ $(id).classList.remove('show'); overlayOpen = anyOverlayOpen(); }
-function anyOverlayOpen(){ return ['menu','howto','challenge','book','end'].some(o=>$(o).classList.contains('show')); }
+function anyOverlayOpen(){ return ['menu','intro','howto','challenge','book','end'].some(o=>$(o).classList.contains('show')); }
 
-$('startBtn').onclick = ()=>{ hideOverlay('menu'); game.screen='playing'; overlayOpen=false; updateHUD(); };
+$('startBtn').onclick = ()=>{ hideOverlay('menu'); showOverlay('intro'); };
+$('startGameBtn').onclick = ()=>{ hideOverlay('intro'); game.screen='playing'; overlayOpen=false; updateHUD(); };
+$('introBack').onclick = ()=>{ hideOverlay('intro'); showOverlay('menu'); };
 $('howtoBtn').onclick = ()=>{ hideOverlay('menu'); showOverlay('howto'); };
 $('howtoBack').onclick = ()=>{ hideOverlay('howto'); showOverlay('menu'); };
 $('bookBtn').onclick = toggleBook;
 $('closeBook').onclick = ()=>{ hideOverlay('book'); };
 $('endBook').onclick = ()=>{ renderBook(); showOverlay('book'); };
 $('toMenu').onclick = ()=>{ hideOverlay('end'); newGame(); showOverlay('menu'); };
+
+function applyMenuBackground(){
+  const bg = ASSETS.menu && ASSETS.menu.background;
+  if(!bg) return;
+  ['menu','intro','howto'].forEach(id=>{
+    const el=$(id);
+    el.style.backgroundImage = `url("${bg}")`;
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+  });
+}
+applyMenuBackground();
 
 function toggleBook(){
   if($('book').classList.contains('show')){ hideOverlay('book'); return; }
@@ -630,17 +843,66 @@ function medalFor(a){
   return "🧭";
 }
 
+function rankProgress(a){
+  // % de llenado de la barra de rango (0..1), con hitos en 3,6,8,10
+  return Math.max(0, Math.min(1, a/10));
+}
+
 function updateHUD(){
   $('aciertos').textContent = game.aciertos;
-  $('rango').textContent = "Rango: " + rankFor(game.aciertos);
-  const hearts = $('hearts');
-  hearts.innerHTML='';
+  $('rangoNombre').textContent = rankFor(game.aciertos);
+  $('rangoMedal').textContent = medalFor(game.aciertos);
+  $('rankFill').style.width = (rankProgress(game.aciertos)*100).toFixed(0)+'%';
+
+  const lives = Math.max(0, game.lives);
+  const lifeSeg = $('lifeSeg');
+  lifeSeg.innerHTML='<span class="lbl">🌶️</span>';
   for(let i=0;i<MAX_LIVES;i++){
     const s=document.createElement('span');
-    s.className='h'+(i>=game.lives?' lost':'');
-    s.textContent='❤️';
-    hearts.appendChild(s);
+    s.className='seg'+(i>=lives?' spent':'');
+    s.textContent='🌶️';
+    lifeSeg.appendChild(s);
   }
+  lifeSeg.classList.toggle('low', lives<=1 && lives>0);
+
+  const picSeg = $('picSeg');
+  picSeg.innerHTML='<span class="lbl">🥘</span>';
+  for(let i=0;i<PICANTERIAS.length;i++){
+    const s=document.createElement('span');
+    s.className='seg'+(game.completed[i]?' done':'');
+    s.textContent='🥘';
+    picSeg.appendChild(s);
+  }
+}
+
+/* =========================================================
+   PUERTAS — animación al entrar/salir de la picantería
+   ========================================================= */
+const _doors=()=>$('doors');
+function _setDoors(lx, rx, trans){
+  const dl=document.querySelector('.door-l'), dr=document.querySelector('.door-r');
+  if(!dl||!dr) return;
+  dl.style.transition=trans||'none'; dr.style.transition=trans||'none';
+  dl.style.transform=`translateX(${lx})`; dr.style.transform=`translateX(${rx})`;
+}
+function doorsReveal(){
+  const d=_doors(); d.classList.add('active');
+  _setDoors('0%','0%','none');             // cerradas (cubren)
+  void d.offsetWidth;                       // forzar reflow
+  _setDoors('-101%','101%','transform .6s cubic-bezier(.55,0,.4,1)'); // abrir
+  setTimeout(()=>d.classList.remove('active'), 640);
+}
+function doorsClose(cb){
+  const d=_doors(); d.classList.add('active');
+  _setDoors('-101%','101%','none');         // empiezan abiertas
+  void d.offsetWidth;
+  _setDoors('0%','0%','transform .42s ease-in'); // cerrar (cubrir)
+  setTimeout(()=>{
+    if(cb) cb();                            // cambiar pantalla bajo las puertas
+    void d.offsetWidth;
+    _setDoors('-101%','101%','transform .55s cubic-bezier(.55,0,.4,1)'); // reabrir
+    setTimeout(()=>d.classList.remove('active'), 560);
+  }, 440);
 }
 
 /* =========================================================
@@ -653,6 +915,11 @@ function startChallenge(pIndex){
   $('chalName').textContent = PICANTERIAS[pIndex].name;
   showOverlay('challenge');
   renderRound();
+  doorsReveal();      // las puertas se abren revelando la picantería
+}
+
+function closePicanteria(after){
+  doorsClose(()=>{ hideOverlay('challenge'); if(after) after(); });
 }
 
 function shuffle(arr){
@@ -663,7 +930,10 @@ function shuffle(arr){
 
 function renderRound(){
   challenge.answered=false;
+  challenge.selectedName=null;
+  challenge.selectedBtn=null;
   const dish = DISHES[challenge.dishIds[challenge.step]];
+  challenge.dish=dish;
   $('chalStep').textContent = `Plato ${challenge.step+1} de 2`;
 
   // plato en silueta (imagen si existe, si no emoji)
@@ -672,7 +942,6 @@ function renderRound(){
   emojiEl.classList.remove('revealed','silhouette');
   imgEl.classList.remove('revealed','silhouette');
   if(media.image){
-    // usa imagen: si hay silueta propia la mostramos tal cual; si no, oscurecemos la foto
     imgEl.style.display='block'; emojiEl.style.display='none';
     if(media.silhouette){ imgEl.src=media.silhouette; }
     else { imgEl.src=media.image; imgEl.classList.add('silhouette'); }
@@ -683,43 +952,105 @@ function renderRound(){
   }
   $('revealBadge').style.display='none';
 
-  // pistas
-  const hl=$('hints'); hl.innerHTML='';
-  dish.hints.forEach(h=>{ const li=document.createElement('li'); li.textContent=h; hl.appendChild(li); });
-
-  // opciones
+  // opciones según nivel: niveles bajos = platos distintos; altos = platos muy parecidos
+  const level = (challenge.p|0) + 1;            // 1..5
   const ol=$('options'); ol.innerHTML='';
-  const opts = shuffle(dish.options);
+  const opts = buildOptions(dish, level);
   opts.forEach((name,i)=>{
     const b=document.createElement('button');
     b.className='opt';
     b.innerHTML=`<span class="num">${i+1}</span><span>${name}</span>`;
-    b.onclick=()=>answer(b, name, dish);
+    b.onclick=()=>selectOption(b, name);
     ol.appendChild(b);
   });
 
-  // ocultar feedback
-  const fb=$('feedback'); fb.classList.remove('show');
+  // reset de botón comprobar, suspenso y feedback
+  const submit=$('submitBtn'); submit.disabled=true; $('submitRow').style.display='flex';
+  $('suspense').classList.remove('show'); stopSuspense();
+  $('feedback').classList.remove('show');
 }
 
-function answer(btn, chosen, dish){
-  if(challenge.answered) return;
-  challenge.answered=true;
-  const correct = (chosen === dish.name);
+function buildOptions(dish, level){
+  const far  = (dish.far  || []).filter(d=>d && d!==dish.name);
+  const near = (dish.near || []).filter(d=>d && d!==dish.name);
+  let distract;
+  if(level <= 2)      distract = far.slice(0,2);                 // muy distintos
+  else if(level === 3)distract = [near[0], far[0]].filter(Boolean); // mezcla
+  else                distract = near.slice(0,2);                // muy parecidos
+  // rellenar por si faltara alguno
+  const pool = [...near, ...far];
+  for(const d of pool){ if(distract.length>=2) break; if(!distract.includes(d)) distract.push(d); }
+  return shuffle([dish.name, ...distract.slice(0,2)]);
+}
 
-  // bloquear y marcar opciones
+function selectOption(btn, name){
+  if(challenge.answered) return;
+  document.querySelectorAll('#options .opt').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  challenge.selectedName=name;
+  challenge.selectedBtn=btn;
+  $('submitBtn').disabled=false;
+}
+
+function submitAnswer(){
+  if(challenge.answered || !challenge.selectedName) return;
+  challenge.answered=true; // evita doble envío durante el suspenso
+
+  // bloquear opciones y botón; mostrar suspenso
+  document.querySelectorAll('#options .opt').forEach(b=>b.disabled=true);
+  $('submitRow').style.display='none';
+  const dur = showSuspense();
+
+  // pequeña carga de suspenso antes de revelar
+  setTimeout(()=>{
+    $('suspense').classList.remove('show');
+    stopSuspense();
+    revealResult();
+  }, dur);
+}
+
+function showSuspense(){
+  const s = ASSETS.suspense || {};
+  const pot=$('suspPot'), gif=$('suspGif'), vid=$('suspVideo'), txt=$('suspText');
+  pot.style.display='none'; gif.style.display='none'; vid.style.display='none';
+
+  if(s.video){
+    vid.src=s.video; vid.style.display='block';
+    try{ vid.currentTime=0; const pr=vid.play(); if(pr&&pr.catch) pr.catch(()=>{}); }catch(e){}
+  } else if(s.gif){
+    gif.src=s.gif; gif.style.display='block';
+  } else {
+    pot.style.display='block';
+  }
+
+  if(s.text===""){ txt.style.display='none'; }
+  else { txt.style.display='block'; txt.firstChild.textContent = (s.text||'Probando el sabor'); }
+
+  $('suspense').classList.add('show');
+  return Math.max(300, (parseInt(s.duration,10) || 1500));
+}
+
+function stopSuspense(){
+  const vid=$('suspVideo');
+  try{ if(vid && !vid.paused) vid.pause(); }catch(e){}
+}
+
+function revealResult(){
+  const dish = challenge.dish;
+  const correct = (challenge.selectedName === dish.name);
+
+  // marcar opciones
   document.querySelectorAll('#options .opt').forEach(b=>{
-    b.disabled=true;
     const label=b.querySelector('span:last-child').textContent;
     if(label===dish.name) b.classList.add('correct');
   });
-  if(!correct) btn.classList.add('wrong');
+  if(!correct && challenge.selectedBtn) challenge.selectedBtn.classList.add('wrong');
 
   // revelar plato (imagen o emoji)
   const emojiEl=$('plate'), imgEl=$('plateImg');
   const media=dishMedia(dish.name);
   if(media.image){
-    imgEl.src=media.image;                 // cambia a la foto completa
+    imgEl.src=media.image;
     imgEl.classList.remove('silhouette');
     imgEl.classList.add('revealed');
   } else {
@@ -731,8 +1062,7 @@ function answer(btn, chosen, dish){
   badge.style.display='block';
 
   // estado de juego
-  if(correct){ game.aciertos++; }
-  else { game.lives--; }
+  if(correct){ game.aciertos++; } else { game.lives--; }
 
   // recetario (siempre se guarda)
   if(!game.book.some(e=>e.index===challenge.dishIds[challenge.step])){
@@ -744,31 +1074,39 @@ function answer(btn, chosen, dish){
   const banner=$('fbBanner');
   banner.className = 'fb-banner ' + (correct?'ok':'no');
   banner.textContent = correct
-    ? '¡Correcto! Buen paladar 👏'
+    ? '¡Respuesta correcta! 👏'
     : `Casi… era “${dish.name}”. ¡Anótalo en tu recetario!`;
-
   $('infoCard').innerHTML = `
     <h3>${dish.emoji} ${dish.name}</h3>
-    <div class="row"><b>Origen</b><span>${dish.origen}</span></div>
-    <div class="row"><b>Ingredientes</b><span>${dish.ingredientes}</span></div>
-    <div class="row"><b>Cultura</b><span>${dish.relevancia}</span></div>
+    <p class="fb-text">${correct ? dish.fbOk : dish.fbBad}</p>
   `;
   $('feedback').classList.add('show');
+
+  // ¡celebración!
+  if(correct) celebrate();
 }
+
+$('submitBtn').onclick = submitAnswer;
 
 $('continueBtn').onclick = ()=>{
   // ¿se acabaron las vidas?
-  if(game.lives<=0){ finishChallengeThenEnd('errores'); return; }
+  if(game.lives<=0){
+    closePicanteria(()=>{
+      game.completed[challenge.p]=true; challenge.active=false; updateHUD();
+      endGame('errores');
+    });
+    return;
+  }
 
   if(challenge.step < 1){
     challenge.step++;
-    renderRound();
+    renderRound();   // siguiente plato (sin puertas)
   } else {
-    // picantería completada (acierte o no los dos)
-    game.completed[challenge.p]=true;
-    challenge.active=false;
-    hideOverlay('challenge');
-    if(activeIndex()<0){ endGame('completo'); }
+    // picantería completada (acierte o no los dos) -> puertas se cierran
+    closePicanteria(()=>{
+      game.completed[challenge.p]=true; challenge.active=false; updateHUD();
+      if(activeIndex()<0){ endGame('completo'); }
+    });
   }
 };
 
@@ -800,7 +1138,7 @@ function renderBook(){
         <div class="name">${d.name}
           <span class="tag ${entry.acertado?'ok':'learn'}">${entry.acertado?'✓ Acertado':'Aprendido'}</span>
         </div>
-        <div class="d"><b>Origen:</b> ${d.origen}. ${d.relevancia}</div>
+        <div class="d">${d.book}</div>
       </div>`;
     grid.appendChild(el);
   });
@@ -950,36 +1288,45 @@ function drawPicanteria(idx){
     ctx.beginPath(); ctx.arc(0,8,70+pulse*8,0,7); ctx.fill();
   }
 
-  // cuerpo adobe
-  ctx.fillStyle = locked ? '#cdb188' : '#f1d7a6';
-  roundRect(-52,-8,104,56,8); ctx.fill();
-  ctx.strokeStyle='#9a6a3a'; ctx.lineWidth=3; ctx.stroke();
+  // ¿imagen propia de esta picantería?
+  const picCfg = (ASSETS.picanterias && ASSETS.picanterias[idx]) || {};
+  const picImg = getImg(picCfg.image);
 
-  // techo
-  ctx.fillStyle = locked ? '#9b6a48' : '#b9512f';
-  ctx.beginPath(); ctx.moveTo(-60,-8); ctx.lineTo(0,-44); ctx.lineTo(60,-8); ctx.closePath(); ctx.fill();
-  ctx.strokeStyle='#7a3417'; ctx.lineWidth=2; ctx.stroke();
-
-  // toldo a rayas
-  if(!locked){
-    for(let i=-5;i<5;i++){
-      ctx.fillStyle = (i%2===0)? p.color : '#fff5e2';
-      ctx.fillRect(i*10, 4, 10, 9);
+  if(imgReady(picImg)){
+    // imagen del local (atenuada si está bloqueada)
+    if(locked){ ctx.save(); ctx.globalAlpha=0.55; ctx.filter='grayscale(1) brightness(.85)'; }
+    drawImageContain(picImg, -66, -56, 132, 110);
+    if(locked){ ctx.filter='none'; ctx.restore(); }
+  } else {
+    // --- local ilustrado por defecto ---
+    // cuerpo adobe
+    ctx.fillStyle = locked ? '#cdb188' : '#f1d7a6';
+    roundRect(-52,-8,104,56,8); ctx.fill();
+    ctx.strokeStyle='#9a6a3a'; ctx.lineWidth=3; ctx.stroke();
+    // techo
+    ctx.fillStyle = locked ? '#9b6a48' : '#b9512f';
+    ctx.beginPath(); ctx.moveTo(-60,-8); ctx.lineTo(0,-44); ctx.lineTo(60,-8); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle='#7a3417'; ctx.lineWidth=2; ctx.stroke();
+    // toldo a rayas
+    if(!locked){
+      for(let i=-5;i<5;i++){
+        ctx.fillStyle = (i%2===0)? p.color : '#fff5e2';
+        ctx.fillRect(i*10, 4, 10, 9);
+      }
+      ctx.fillStyle='#7a3f22'; ctx.fillRect(-52,13,104,2);
     }
-    ctx.fillStyle='#7a3f22'; ctx.fillRect(-52,13,104,2);
+    // puerta
+    ctx.fillStyle = locked ? '#7c5733' : '#8a4a28';
+    ctx.fillRect(-10,20,20,28);
+    // ventanas
+    ctx.fillStyle = locked ? '#a98a5e' : '#cfe7ea';
+    ctx.fillRect(-40,20,16,14); ctx.fillRect(24,20,16,14);
   }
-
-  // puerta
-  ctx.fillStyle = locked ? '#7c5733' : '#8a4a28';
-  ctx.fillRect(-10,20,20,28);
-  // ventanas
-  ctx.fillStyle = locked ? '#a98a5e' : '#cfe7ea';
-  ctx.fillRect(-40,20,16,14); ctx.fillRect(24,20,16,14);
 
   // ícono / estado
   ctx.textAlign='center'; ctx.textBaseline='middle';
   if(locked){
-    ctx.font='22px serif'; ctx.fillText('🔒', 0, -16);
+    ctx.font='22px serif'; ctx.fillText('🔒', 0, imgReady(picImg)? 0 : -16);
   } else if(completed){
     ctx.fillStyle='#2f9e6b';
     ctx.beginPath(); ctx.arc(40,-26,13,0,7); ctx.fill();
@@ -1088,6 +1435,108 @@ function render(){
     else drawPicanteria(d.i);
   });
 }
+
+/* =========================================================
+   CELEBRACIÓN — confeti + globos (al acertar)
+   ========================================================= */
+const FX_COLORS = ['#f4c95d','#e8a13c','#c25b3a','#1aa39b','#d6453d','#3a8f5e','#e85a2f','#f7d56b'];
+let fxParticles = [];
+let fxRunning = false;
+
+function fxResize(){
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  fxCanvas.width = Math.max(1, Math.round((fxCanvas.clientWidth||window.innerWidth)*dpr));
+  fxCanvas.height= Math.max(1, Math.round((fxCanvas.clientHeight||window.innerHeight)*dpr));
+  fxctx.setTransform(dpr,0,0,dpr,0,0);
+}
+
+function celebrate(){
+  fxResize();
+  const w = fxCanvas.clientWidth || window.innerWidth;
+  const h = fxCanvas.clientHeight || window.innerHeight;
+
+  // Confeti: cae desde arriba en dos chorros laterales
+  const bursts=[{x:w*0.18},{x:w*0.82},{x:w*0.5}];
+  bursts.forEach(b=>{
+    for(let i=0;i<46;i++){
+      fxParticles.push({
+        kind:'confetti',
+        x:b.x + (Math.random()-0.5)*70,
+        y:h*0.18 + Math.random()*40,
+        vx:(Math.random()-0.5)*7,
+        vy:Math.random()*-4-2,
+        g:0.18+Math.random()*0.12,
+        w:6+Math.random()*7, h:9+Math.random()*8,
+        rot:Math.random()*6.28, vr:(Math.random()-0.5)*0.4,
+        color:FX_COLORS[(Math.random()*FX_COLORS.length)|0],
+        life:0, max:150+Math.random()*60
+      });
+    }
+  });
+
+  // Globos: suben desde abajo, con leve bamboleo
+  for(let i=0;i<9;i++){
+    fxParticles.push({
+      kind:'balloon',
+      x:w*(0.1+Math.random()*0.8),
+      y:h+30+Math.random()*120,
+      vy:-(1.1+Math.random()*1.0),
+      r:16+Math.random()*12,
+      sway:Math.random()*6.28, swaySpd:0.03+Math.random()*0.03, swayAmp:12+Math.random()*16,
+      color:FX_COLORS[(Math.random()*FX_COLORS.length)|0],
+      life:0, max:240
+    });
+  }
+
+  if(!fxRunning){ fxRunning=true; fxLoop(); }
+}
+
+function fxLoop(){
+  const w = fxCanvas.width, h = fxCanvas.height;
+  fxctx.clearRect(0,0,w,h);
+
+  for(const p of fxParticles){
+    p.life++;
+    if(p.kind==='confetti'){
+      p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.vx *= 0.99;
+      const alpha = p.life>p.max-30 ? Math.max(0,(p.max-p.life)/30) : 1;
+      fxctx.save();
+      fxctx.globalAlpha = alpha;
+      fxctx.translate(p.x,p.y); fxctx.rotate(p.rot);
+      fxctx.fillStyle = p.color;
+      fxctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      fxctx.restore();
+    } else { // balloon
+      p.sway += p.swaySpd;
+      p.y += p.vy;
+      const bx = p.x + Math.sin(p.sway)*p.swayAmp;
+      const alpha = p.life>p.max-40 ? Math.max(0,(p.max-p.life)/40) : 1;
+      fxctx.save();
+      fxctx.globalAlpha = alpha;
+      // hilo
+      fxctx.strokeStyle='rgba(90,55,20,.5)'; fxctx.lineWidth=1.4;
+      fxctx.beginPath(); fxctx.moveTo(bx, p.y+p.r);
+      fxctx.quadraticCurveTo(bx+6, p.y+p.r+18, bx, p.y+p.r+34); fxctx.stroke();
+      // cuerpo
+      fxctx.fillStyle=p.color;
+      fxctx.beginPath(); fxctx.ellipse(bx, p.y, p.r*0.82, p.r, 0, 0, 6.2832); fxctx.fill();
+      // brillo
+      fxctx.fillStyle='rgba(255,255,255,.35)';
+      fxctx.beginPath(); fxctx.ellipse(bx-p.r*0.28, p.y-p.r*0.34, p.r*0.2, p.r*0.3, -0.5, 0, 6.2832); fxctx.fill();
+      // nudo
+      fxctx.fillStyle=p.color;
+      fxctx.beginPath(); fxctx.moveTo(bx-3,p.y+p.r); fxctx.lineTo(bx+3,p.y+p.r); fxctx.lineTo(bx,p.y+p.r+5); fxctx.fill();
+      fxctx.restore();
+    }
+  }
+
+  // limpiar muertos / fuera de pantalla
+  fxParticles = fxParticles.filter(p=> p.life<p.max && p.y < fxCanvas.clientHeight+80 && (p.kind!=='balloon' || p.y > -60));
+
+  if(fxParticles.length>0){ requestAnimationFrame(fxLoop); }
+  else { fxctx.clearRect(0,0,fxCanvas.width,fxCanvas.height); fxRunning=false; }
+}
+window.addEventListener('resize', ()=>{ if(fxRunning) fxResize(); });
 
 /* =========================================================
    LOOP
