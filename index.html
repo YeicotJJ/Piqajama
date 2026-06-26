@@ -34,6 +34,35 @@
     overflow:hidden;
   }
 
+  
+* {
+  --sb-track-color: #b9563d;
+  --sb-thumb-color: #ffe14f;
+  --sb-size: 9px;
+}
+
+*::-webkit-scrollbar {
+  width: var(--sb-size)
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 6px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 6px;
+  
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-color: var(--sb-thumb-color)
+                     var(--sb-track-color);
+  }
+}
+
   #stage{
     position:relative;
     width:100vw;
@@ -173,6 +202,63 @@
   .story p:last-child{margin-bottom:0}
   .story-foot{font-family:'Baloo 2';font-weight:700;color:var(--teal-deep);margin:2px 0 0}
 
+  /* Ajustes / volumen */
+  #settings{z-index:16}
+  .settings-panel{max-width:420px}
+  .set-block{background:#fff;border:2px dashed #c98a4f;border-radius:14px;padding:18px 20px;margin:14px 0;text-align:left}
+  .set-label{display:flex;justify-content:space-between;align-items:center;font-family:'Baloo 2';font-weight:800;color:var(--ink);font-size:15px;margin-bottom:12px}
+  /* Insignia de valor (% al lado de cada etiqueta) */
+  .set-label .val{
+    font-family:'Baloo 2';font-weight:800;font-size:13px;color:#fff;
+    background:linear-gradient(180deg,#e8a13c,#c25b3a);
+    border:1.5px solid #8a4a28;border-radius:999px;
+    padding:2px 11px;min-width:46px;text-align:center;
+    box-shadow:0 2px 0 rgba(138,74,40,.3), inset 0 1px 0 rgba(255,255,255,.35);
+  }
+
+  /* ===== Sliders festivos (con relleno que refleja el valor) ===== */
+  .slider{
+    --p:50;
+    -webkit-appearance:none;appearance:none;
+    width:100%;height:16px;border-radius:999px;
+    margin:2px 0 4px;
+    background:
+      linear-gradient(180deg,#f9dd7e 0%,#e8a13c 52%,#c25b3a 100%)
+        left center / calc(var(--p) * 1%) 100% no-repeat,
+      repeating-linear-gradient(90deg,#e7d4af 0 1px,#f2e2c2 1px 15px);
+    border:2px solid #8a4a28;
+    box-shadow:inset 0 2px 4px rgba(90,55,20,.28), 0 3px 0 rgba(138,74,40,.16);
+    outline:none;cursor:pointer;
+    transition:box-shadow .15s ease;
+  }
+  .slider:focus-visible{box-shadow:inset 0 2px 4px rgba(90,55,20,.28), 0 0 0 4px rgba(26,163,155,.35)}
+  /* Pulgar — WebKit */
+  .slider::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;
+    width:30px;height:30px;border-radius:50%;margin-top:-7px;
+    background:radial-gradient(circle at 34% 30%,#fff 0 9%,#ffe9a8 28%,#f4c95d 52%,#e8a13c 78%,#c25b3a 100%);
+    border:2.5px solid #8a4a28;
+    box-shadow:0 3px 7px rgba(63,33,12,.4), inset 0 1px 2px rgba(255,255,255,.7);
+    cursor:pointer;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .slider:hover::-webkit-slider-thumb{transform:scale(1.1)}
+  .slider:active::-webkit-slider-thumb{transform:scale(1.18);
+    box-shadow:0 0 0 7px rgba(232,161,60,.28), 0 3px 7px rgba(63,33,12,.4), inset 0 1px 2px rgba(255,255,255,.7)}
+  .slider::-webkit-slider-runnable-track{background:transparent;border:none;height:16px}
+  /* Pulgar — Firefox */
+  .slider::-moz-range-thumb{
+    width:30px;height:30px;border-radius:50%;
+    background:radial-gradient(circle at 34% 30%,#fff 0 9%,#ffe9a8 28%,#f4c95d 52%,#e8a13c 78%,#c25b3a 100%);
+    border:2.5px solid #8a4a28;
+    box-shadow:0 3px 7px rgba(63,33,12,.4), inset 0 1px 2px rgba(255,255,255,.7);
+    cursor:pointer;transition:transform .12s ease;
+  }
+  .slider:active::-moz-range-thumb{transform:scale(1.16)}
+  .slider::-moz-range-track{background:transparent;border:none;height:16px}
+  .slider::-moz-focus-outer{border:0}
+  .set-note{font-size:12px;color:var(--ink-soft);margin:12px 0 0}
+
   /* Marca PIQAJAMA */
   .brand{font-size:clamp(44px,9vw,76px);letter-spacing:.04em;line-height:.92;margin:.05em 0 0;
     background:linear-gradient(180deg,#e8552f 0%, #c25b3a 45%, #d98a2b 100%);
@@ -180,6 +266,27 @@
     text-shadow:0 3px 0 rgba(122,63,34,.18);filter:drop-shadow(0 4px 6px rgba(194,91,58,.25))}
   .tagline{font-family:'Baloo 2';font-weight:700;font-size:clamp(15px,2.6vw,19px);
     color:var(--teal-deep);margin:2px 0 6px}
+
+  /* ====== TAMAÑOS GRANDES — pantallas amplias ====== */
+  .panel-wide{
+    width:min(1080px, 94vw);
+    padding:clamp(28px,4vw,54px) clamp(26px,5vw,68px);
+  }
+  .panel-wide .eyebrow{font-size:clamp(13px,1.4vw,16px)}
+  .panel-wide h1,.panel-wide h2{font-size:clamp(34px,5.2vw,62px);line-height:1.04}
+  .panel-wide .lead{font-size:clamp(17px,2.1vw,24px);max-width:820px;margin:10px auto 0;line-height:1.55}
+  .panel-wide .brand{font-size:clamp(56px,11vw,112px)}
+  .panel-wide .tagline{font-size:clamp(17px,2.4vw,26px)}
+  .welcome-title{font-family:'Baloo 2';font-weight:800;color:var(--terracotta);
+    font-size:clamp(36px,6vw,68px);line-height:1.02;margin:.08em 0 .1em}
+  .panel-wide .story{padding:clamp(18px,2.4vw,30px) clamp(20px,3vw,42px);margin:clamp(16px,2.4vw,26px) auto;max-width:880px}
+  .panel-wide .story p{font-size:clamp(16px,1.75vw,21px);line-height:1.72;margin:12px 0}
+  .panel-wide .story-foot{font-size:clamp(17px,2vw,23px);margin-top:6px}
+  .panel-wide .menu-art{font-size:clamp(40px,6vw,66px);margin:16px 0 4px}
+  .panel-wide .actions{margin-top:22px;gap:16px}
+
+  /* Botón grande para las acciones principales */
+  .btn-lg{padding:16px 38px;font-size:clamp(17px,1.8vw,21px);border-radius:16px}
 
   /* Lienzo de efectos (confeti / globos) */
   #fx{position:absolute;inset:0;width:100%;height:100%;z-index:40;pointer-events:none;background:transparent}
@@ -226,50 +333,52 @@
   .dots i:nth-child(3){animation-delay:.4s}
   @keyframes dot{0%,80%,100%{opacity:.2}40%{opacity:1}}
 
-  .howto{text-align:left;background:#fff;border:2px dashed #c98a4f;border-radius:14px;padding:14px 16px;margin:16px 0}
-  .howto h3{font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .howto{text-align:left;background:#fff;border:2px dashed #c98a4f;border-radius:14px;padding:clamp(16px,2vw,24px) clamp(18px,2.4vw,28px);margin:18px 0}
+  .howto h3{font-size:clamp(18px,2vw,23px);margin-bottom:10px;display:flex;align-items:center;gap:8px}
   .howto ul{margin:0;padding-left:2px;list-style:none}
-  .howto li{display:flex;gap:10px;align-items:flex-start;margin:7px 0;font-size:14px;color:var(--ink)}
-  .howto li .ic{font-size:18px;flex:0 0 auto;width:26px;text-align:center}
-  .key{display:inline-block;font-family:'Baloo 2';font-weight:700;background:var(--ink);color:#fff;border-radius:7px;padding:1px 8px;font-size:13px;box-shadow:0 2px 0 #000;margin:0 1px}
+  .howto li{display:flex;gap:12px;align-items:flex-start;margin:11px 0;font-size:clamp(15px,1.6vw,18px);color:var(--ink);line-height:1.5}
+  .howto li .ic{font-size:clamp(20px,2.2vw,24px);flex:0 0 auto;width:30px;text-align:center}
+  .key{display:inline-block;font-family:'Baloo 2';font-weight:700;background:var(--ink);color:#fff;border-radius:7px;padding:2px 9px;font-size:clamp(13px,1.4vw,15px);box-shadow:0 2px 0 #000;margin:0 1px}
 
-  .ranks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-  .ranks .r{background:#fff;border:1.5px solid #e0bd8c;border-radius:10px;padding:8px 10px;text-align:left;font-size:13px}
-  .ranks .r b{font-family:'Baloo 2';display:block;color:var(--terracotta);font-size:14px}
-  .ranks .r span{color:var(--ink-soft);font-size:12px}
+  .ranks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .ranks .r{background:#fff;border:1.5px solid #e0bd8c;border-radius:12px;padding:12px 16px;text-align:left}
+  .ranks .r b{font-family:'Baloo 2';display:block;color:var(--terracotta);font-size:clamp(15px,1.7vw,19px)}
+  .ranks .r span{color:var(--ink-soft);font-size:clamp(13px,1.4vw,16px)}
 
   .actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px}
 
   /* ---------- Challenge ---------- */
-  #challenge .panel{text-align:center}
-  .chal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
-  .chal-head .pill{background:var(--teal);color:#fff;font-family:'Baloo 2';font-weight:700;font-size:12px;border-radius:999px;padding:4px 12px}
-  .chal-head .step{font-family:'Baloo 2';font-weight:700;color:var(--ink-soft);font-size:13px}
-  .plate-wrap{margin:6px auto 2px;width:150px;height:150px;border-radius:50%;
+  #challenge .panel{text-align:center;width:min(760px,94vw);padding:clamp(24px,3vw,40px) clamp(24px,4vw,48px)}
+  .chal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+  .chal-head .pill{background:var(--teal);color:#fff;font-family:'Baloo 2';font-weight:700;font-size:clamp(13px,1.5vw,16px);border-radius:999px;padding:6px 16px}
+  .chal-head .step{font-family:'Baloo 2';font-weight:700;color:var(--ink-soft);font-size:clamp(13px,1.5vw,16px)}
+  .plate-wrap{margin:10px auto 4px;width:clamp(190px,26vw,250px);height:clamp(190px,26vw,250px);border-radius:50%;
     background:radial-gradient(circle at 38% 32%, #ffffff, #efe2c6 70%, #e3cfa6);
-    border:6px solid #f7eede;box-shadow:0 10px 22px rgba(63,33,12,.22), inset 0 0 0 8px #fbf3e2;
+    border:7px solid #f7eede;box-shadow:0 12px 26px rgba(63,33,12,.24), inset 0 0 0 10px #fbf3e2;
     display:flex;align-items:center;justify-content:center;position:relative}
   .plate-emoji,.plate-img{transition:filter .5s ease, transform .4s ease}
-  .plate-emoji{font-size:74px;line-height:1}
-  .plate-img{width:120px;object-fit:cover;display:none}
+  .plate-emoji{font-size:clamp(96px,15vw,128px);line-height:1}
+  .plate-img{width:clamp(150px,21vw,200px);height:clamp(150px,21vw,200px);border-radius:50%;object-fit:cover;display:none}
   .silhouette{filter:brightness(0) saturate(0);transform:scale(.96)}
   .revealed{filter:none;transform:scale(1)}
-  .reveal-badge{position:absolute;top:-6px;right:-6px;font-size:30px;display:none;
+  .reveal-badge{position:absolute;top:-4px;right:-4px;font-size:clamp(34px,4.4vw,46px);display:none;
     animation:pop .35s cubic-bezier(.2,1.4,.5,1)}
   @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
 
-  .hints{list-style:none;margin:10px auto 4px;padding:0;max-width:440px;text-align:left}
+  .hints{list-style:none;margin:10px auto 4px;padding:0;max-width:560px;text-align:left}
   .hints li{display:flex;gap:8px;align-items:flex-start;font-size:14px;color:var(--ink);margin:5px 0}
   .hints li::before{content:"🔎";flex:0 0 auto}
 
-  .options{display:grid;gap:10px;margin:14px auto 0;max-width:440px}
+  #challenge .panel > p{font-size:clamp(16px,1.9vw,21px)}
+
+  .options{display:grid;gap:12px;margin:16px auto 0;max-width:560px}
   .opt{
-    cursor:pointer;border:2px solid #c98a4f;background:#fff;border-radius:12px;
-    padding:13px 14px;font-family:'Baloo 2';font-weight:700;font-size:16px;color:var(--ink);
-    text-align:left;display:flex;align-items:center;gap:10px;transition:.12s;
+    cursor:pointer;border:2px solid #c98a4f;background:#fff;border-radius:14px;
+    padding:16px 18px;font-family:'Baloo 2';font-weight:700;font-size:clamp(17px,1.9vw,21px);color:var(--ink);
+    text-align:left;display:flex;align-items:center;gap:12px;transition:.12s;
   }
-  .opt .num{flex:0 0 auto;width:26px;height:26px;border-radius:7px;background:var(--maize);color:var(--ink);
-    display:grid;place-items:center;font-size:14px}
+  .opt .num{flex:0 0 auto;width:32px;height:32px;border-radius:8px;background:var(--maize);color:var(--ink);
+    display:grid;place-items:center;font-size:clamp(15px,1.7vw,18px)}
   .opt:hover:not(:disabled){border-color:var(--teal);transform:translateY(-1px)}
   .opt:disabled{cursor:default;opacity:.92}
   .opt.correct{background:#e7f6ee;border-color:var(--good);color:#1d6b48}
@@ -277,37 +386,40 @@
   .opt.wrong{background:#fbe7e4;border-color:var(--bad);color:#9c2f24}
   .opt.wrong .num{background:var(--bad);color:#fff}
 
-  .feedback{display:none;margin-top:16px;text-align:left}
+  .feedback{display:none;margin-top:18px;text-align:left}
   .feedback.show{display:block;animation:slideUp .3s ease}
   @keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  .fb-banner{font-family:'Baloo 2';font-weight:800;font-size:18px;border-radius:12px;padding:10px 14px;text-align:center}
+  .fb-banner{font-family:'Baloo 2';font-weight:800;font-size:clamp(18px,2.1vw,23px);border-radius:12px;padding:12px 16px;text-align:center}
   .fb-banner.ok{background:#e7f6ee;color:#1d6b48;border:2px solid var(--good)}
   .fb-banner.no{background:#fbe7e4;color:#9c2f24;border:2px solid var(--bad)}
-  .info-card{background:#fff;border:1.5px solid #e0bd8c;border-radius:12px;padding:14px 16px;margin-top:12px}
-  .info-card h3{font-size:19px;margin:0 0 6px}
+  .info-card{background:#fff;border:1.5px solid #e0bd8c;border-radius:12px;padding:16px 18px;margin-top:14px}
+  .info-card h3{font-size:clamp(20px,2.3vw,26px);margin:0 0 8px}
   .info-card .row{display:flex;gap:8px;margin:6px 0;font-size:14px;line-height:1.45}
   .info-card .row b{flex:0 0 92px;color:var(--terracotta);font-family:'Baloo 2'}
   .info-card .row span{color:var(--ink)}
-  .info-card .fb-text{font-size:14px;line-height:1.55;color:var(--ink);margin:0;text-align:left}
+  .info-card .fb-text{font-size:clamp(15px,1.7vw,19px);line-height:1.6;color:var(--ink);margin:0;text-align:left}
 
   /* ---------- Book ---------- */
-  #book .panel{text-align:left}
-  .book-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
-  .book-item{display:flex;gap:14px;background:#fff;border:1.5px solid #e0bd8c;border-radius:12px;padding:12px 14px}
-  .book-item .be{font-size:42px;line-height:1;flex:0 0 auto;width:54px;text-align:center;align-self:center}
-  .book-item .be img{width:54px;border-radius:10px;object-fit:cover;display:block}
+  #book .panel{text-align:left;width:min(840px,94vw);padding:clamp(22px,3vw,40px) clamp(22px,3.5vw,44px)}
+  #book h2{font-size:clamp(26px,3.2vw,38px)}
+  .book-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:16px}
+  @media (min-width:720px){ .book-grid{grid-template-columns:1fr 1fr} }
+  .book-item{display:flex;gap:16px;background:#fff;border:1.5px solid #e0bd8c;border-radius:14px;padding:14px 16px}
+  .book-item .be{font-size:54px;line-height:1;flex:0 0 auto;width:70px;text-align:center;align-self:center}
+  .book-item .be img{width:70px;height:70px;border-radius:12px;object-fit:cover;display:block}
   .book-item .bt{flex:1}
-  .book-item .bt .name{font-family:'Baloo 2';font-weight:800;font-size:17px;display:flex;align-items:center;gap:8px}
-  .book-item .bt .tag{font-size:11px;font-weight:800;border-radius:999px;padding:2px 9px}
+  .book-item .bt .name{font-family:'Baloo 2';font-weight:800;font-size:clamp(18px,2vw,22px);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .book-item .bt .tag{font-size:12px;font-weight:800;border-radius:999px;padding:3px 10px}
   .tag.ok{background:#e7f6ee;color:#1d6b48}
   .tag.learn{background:#fef0d8;color:#9a6a18}
-  .book-item .bt .d{font-size:13px;color:var(--ink-soft);margin-top:4px;line-height:1.45}
-  .book-empty{text-align:center;color:var(--ink-soft);padding:24px 0}
+  .book-item .bt .d{font-size:clamp(14px,1.5vw,16px);color:var(--ink-soft);margin-top:5px;line-height:1.5}
+  .book-empty{text-align:center;color:var(--ink-soft);padding:24px 0;font-size:16px}
 
   /* ---------- End ---------- */
-  .medal{font-size:72px;line-height:1;margin:4px 0}
-  .score-big{font-family:'Baloo 2';font-weight:800;font-size:40px;color:var(--terracotta)}
-  .rank-final{font-family:'Baloo 2';font-weight:800;font-size:26px;color:var(--ink);margin-top:2px}
+  .medal{font-size:clamp(72px,10vw,104px);line-height:1;margin:4px 0}
+  .end-stats{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:16px}
+  .score-big{font-family:'Baloo 2';font-weight:800;font-size:clamp(40px,5.5vw,60px);color:var(--terracotta)}
+  .rank-final{font-family:'Baloo 2';font-weight:800;font-size:clamp(24px,3vw,34px);color:var(--ink);margin-top:2px}
 
   /* ---------- Touch controls ---------- */
   #touch{position:absolute;inset:0;z-index:5;pointer-events:none;display:none}
@@ -329,12 +441,102 @@
     .panel{padding:20px 16px}
     .ranks{grid-template-columns:1fr}
   }
+
+  /* =========================================================
+     PANTALLA DE CARGA (preloader de imágenes y sonidos)
+     ========================================================= */
+  #loader{
+    position:absolute;inset:0;z-index:40;
+    display:flex;align-items:center;justify-content:center;padding:24px;
+    background:radial-gradient(120% 90% at 50% 0%, #f6bf63 0%, #e09a45 48%, #c25b3a 110%);
+    opacity:1;visibility:visible;
+    transition:opacity .55s ease, visibility .55s ease;
+  }
+  #loader.done{opacity:0;visibility:hidden;pointer-events:none}
+  /* papel picado dentro del loader */
+  #loader::before{
+    content:"";position:absolute;left:0;right:0;top:0;height:16px;
+    background:repeating-linear-gradient(90deg,#d6453d 0 26px,#1aa39b 26px 52px,#f4c95d 52px 78px,#1f7d77 78px 104px);
+    -webkit-mask:repeating-linear-gradient(90deg,#000 0 18px,transparent 18px 26px);
+            mask:repeating-linear-gradient(90deg,#000 0 18px,transparent 18px 26px);
+    opacity:.92;
+  }
+  .loader-inner{
+    position:relative;z-index:1;width:min(420px,92%);
+    display:flex;flex-direction:column;align-items:center;text-align:center;
+  }
+  .loader-pot{position:relative;margin-bottom:2px;height:96px;display:flex;align-items:flex-end}
+  .loader-pot .pot{font-size:74px;line-height:1;filter:drop-shadow(0 9px 14px rgba(63,33,12,.4));
+    animation:potWobble 2.6s ease-in-out infinite;transform-origin:50% 90%}
+  @keyframes potWobble{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+  .steam{position:absolute;left:50%;top:2px;transform:translateX(-50%);display:flex;gap:11px;pointer-events:none}
+  .steam span{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.75);filter:blur(2px);
+    animation:steamRise 2.4s ease-in-out infinite}
+  .steam span:nth-child(2){animation-delay:.6s}
+  .steam span:nth-child(3){animation-delay:1.2s}
+  @keyframes steamRise{0%{opacity:0;transform:translateY(10px) scale(.5)}
+    25%{opacity:.95}100%{opacity:0;transform:translateY(-40px) scale(1.5)}}
+  .loader-brand{
+    font-family:'Baloo 2';font-weight:800;letter-spacing:.04em;margin:.05em 0 .02em;
+    font-size:clamp(42px,12vw,62px);line-height:.95;
+    background:linear-gradient(180deg,#fff3d6 0%,#f4c95d 46%,#c25b3a 112%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    -webkit-text-stroke:2px #8a4a28;text-shadow:0 4px 0 rgba(138,74,40,.22);
+  }
+  .loader-sub{font-family:'Baloo 2';font-weight:700;color:#fff7ea;
+    text-shadow:0 1px 3px rgba(63,33,12,.45);margin:0 0 20px;font-size:15px}
+  .loader-track{
+    width:100%;height:18px;border-radius:999px;position:relative;overflow:hidden;
+    background:repeating-linear-gradient(90deg,#e3d0ab 0 1px,#f0dcb8 1px 16px);
+    border:2.5px solid #8a4a28;
+    box-shadow:inset 0 2px 4px rgba(90,55,20,.32), 0 4px 0 rgba(138,74,40,.22);
+  }
+  .loader-fill{
+    height:100%;width:0;border-radius:999px;position:relative;overflow:hidden;
+    background:linear-gradient(180deg,#f9dd7e,#e8a13c 55%,#c25b3a);
+    box-shadow:0 0 12px rgba(232,161,60,.75);
+    transition:width .3s cubic-bezier(.34,1.15,.5,1);
+  }
+  .loader-fill::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+    transform:translateX(-100%);animation:loaderShine 1.25s linear infinite;
+  }
+  @keyframes loaderShine{to{transform:translateX(100%)}}
+  .loader-meta{display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:12px;
+    font-family:'Baloo 2';font-weight:700;font-size:13px;color:#fff7ea;text-shadow:0 1px 2px rgba(63,33,12,.45)}
+  #loaderPct{font-size:18px;color:#fff;background:rgba(138,74,40,.4);
+    padding:2px 12px;border-radius:999px;border:1.5px solid rgba(138,74,40,.5)}
+  #loaderStatus{opacity:.95}
+  .loader-emojis{margin-top:18px;font-size:22px;letter-spacing:7px;opacity:.9;
+    filter:drop-shadow(0 2px 3px rgba(63,33,12,.3))}
 </style>
 </head>
 <body>
 <div id="stage">
   <canvas id="game" width="960" height="600"></canvas>
   <canvas id="fx"></canvas>
+
+  <!-- PANTALLA DE CARGA (precarga de imágenes y sonidos) -->
+  <div id="loader">
+    <div class="loader-inner">
+      <div class="loader-pot">
+        <div class="steam"><span></span><span></span><span></span></div>
+        <div class="pot">🍲</div>
+      </div>
+      <h1 class="loader-brand">PIQAJAMA</h1>
+      <p class="loader-sub">Preparando las picanterías…</p>
+      <div class="loader-track"><div class="loader-fill" id="loaderFill"></div></div>
+      <div class="loader-meta">
+        <span id="loaderPct">0%</span>
+        <span id="loaderStatus">Cargando sabores…</span>
+      </div>
+      <div class="loader-emojis">🌶️ 🐟 🍲 🍮 🌽</div>
+    </div>
+  </div>
+
+  <!-- Música de fondo -->
+  <audio id="bgm" loop preload="auto"></audio>
 
   <!-- Puertas (animación al entrar/salir de una picantería) -->
   <div id="doors" aria-hidden="true">
@@ -366,6 +568,7 @@
     </div>
     <div id="hud-right">
       <button class="btn alt" id="bookBtn">📖 Recetario</button>
+      <button class="btn ghost" id="settingsBtnHud">⚙️ Ajustes</button>
     </div>
   </div>
 
@@ -383,49 +586,51 @@
     <div id="tAct">E</div>
   </div>
 
-  <!-- MENU -->
-  <div class="overlay screen show" id="menu">
-    <div class="panel">
-      <h1 class="brand">PIQAJAMA</h1>
-      <p class="tagline">Un reto gastronómico en Catacaos</p>
-      <p class="lead">Recorre 5 picanterías de la Plaza de Catacaos y descubre los platos que son patrimonio vivo de la cocina cataquense. Cada plato escondido es una pista por resolver.</p>
+  <!-- CONTEXTO / BIENVENIDA (primera pantalla, antes del menú) -->
+  <div class="overlay screen" id="intro">
+    <div class="panel panel-wide">
+      <div class="eyebrow">Contexto · Catacaos, Piura</div>
+      <h1 class="welcome-title">¡Bienvenido a Piqajama!</h1>
+      <div class="story">
+        <p>Las picanterías de Catacaos son mucho más que lugares donde se preparan comidas tradicionales. Durante décadas han sido espacios de encuentro, conversación y memoria, donde familias enteras han compartido historias, costumbres y saberes que aún forman parte de la identidad de nuestro pueblo.</p>
+        <p>En este recorrido visitarás algunas de las picanterías más representativas de Catacaos. A través de sus platos, descubrirás las tradiciones que las mantienen vivas hasta el día de hoy.</p>
+        <p>Observa con atención, supera los desafíos y adéntrate en un mundo donde cada sabor guarda una historia y cada picantería conserva una parte de nuestra herencia cultural.</p>
+      </div>
+      <p class="story-foot">🌾 Tu viaje está por comenzar.</p>
       <div class="actions">
-        <button class="btn" id="startBtn">Comenzar reto</button>
-        <button class="btn ghost" id="howtoBtn">Cómo jugar</button>
+        <button class="btn btn-lg" id="introContinue">Continuar</button>
       </div>
     </div>
   </div>
 
-  <!-- INTRO / CONTEXTO -->
-  <div class="overlay screen" id="intro">
-    <div class="panel">
-      <div class="eyebrow">Tu historia · Día 1 en Catacaos</div>
-      <h2 class="story-title">🌅 Bienvenido a Catacaos</h2>
-      <div class="story">
-        <p>Acabas de bajar del mototaxi en plena <b>Plaza de Catacaos</b>. El sol del norte aprieta y, desde cada esquina, llega el aroma del culantro, la chicha de jora y el pescado fresco.</p>
-        <p>Eres <b>nuevo en el pueblo</b> y te han contado que aquí, en sus <b>picanterías</b>, se guarda el verdadero sabor de Piura. Cada local esconde sus propios secretos servidos en el plato.</p>
-        <p>Hoy te propones un reto: recorrer las <b>5 picanterías</b> de la plaza y descubrir, bocado a bocado, los platos que son patrimonio de esta tierra. ¿Llegarás a convertirte en todo un <b>Cataquero de pura cepa</b>?</p>
-      </div>
-      <p class="story-foot">Tu recorrido empieza ahora. 🥘</p>
+  <!-- MENU -->
+  <div class="overlay screen" id="menu">
+    <div class="panel panel-wide">
+      <div class="eyebrow">Reto gastronómico · Catacaos, Piura</div>
+      <h1 class="brand">PIQAJAMA</h1>
+      <p class="tagline">Un reto gastronómico en Catacaos</p>
+      <p class="lead">Recorre 5 picanterías de la Plaza de Catacaos y descubre los platos que son patrimonio vivo de la cocina cataquense. Cada plato escondido es un desafío por resolver.</p>
+      <div class="menu-art">🍽️ 🌶️ 🐟 🍮</div>
       <div class="actions">
-        <button class="btn" id="startGameBtn">Empezar recorrido</button>
-        <button class="btn ghost" id="introBack">Volver</button>
+        <button class="btn btn-lg" id="startBtn">Comenzar reto</button>
+        <button class="btn ghost" id="howtoBtn">Instrucciones</button>
+        <button class="btn ghost" id="settingsBtnMenu">⚙️ Ajustes</button>
       </div>
     </div>
   </div>
 
   <!-- HOW TO PLAY (pantalla aparte) -->
   <div class="overlay screen" id="howto">
-    <div class="panel">
+    <div class="panel panel-wide">
       <div class="eyebrow">Guía rápida</div>
-      <h2>🧭 Cómo jugar</h2>
+      <h2>🧭 Instrucciones</h2>
       <div class="howto">
         <h3>🎮 Controles y dinámica</h3>
         <ul>
           <li><span class="ic">🕹️</span><div>Muévete con <span class="key">W A S D</span> o las <span class="key">flechas</span>.</div></li>
           <li><span class="ic">🚪</span><div>Acércate a la picantería que brilla y pulsa <span class="key">E</span> o <span class="key">Espacio</span> para entrar.</div></li>
-          <li><span class="ic">🍽️</span><div>En cada picantería verás 2 platos en silueta. Lee las pistas, elige una opción y pulsa <span class="key">Comprobar respuesta</span> (o <span class="key">Enter</span>) para confirmar.</div></li>
-          <li><span class="ic">✅</span><div>Si aciertas, lo celebramos con confeti 🎉. Si fallas, conoces igual la respuesta y pierdes una vida.</div></li>
+          <li><span class="ic">🍽️</span><div>En cada picantería verás 2 platos. Elije la opción que creas y obtén más información del plato<span class="key">Comprobar respuesta</span> (o <span class="key">Enter</span>) para confirmar.</div></li>
+          <li><span class="ic">✅</span><div>Si aciertas, ganarás puntos. Si fallas, conoces igual la respuesta y pierdes una vida.</div></li>
           <li><span class="ic">📖</span><div>Cada plato cataquense queda guardado en tu <b>Recetario</b>, lo aciertes o no.</div></li>
           <li><span class="ic">❤️</span><div>Tienes <b>5 vidas</b>. Al sexto error termina el recorrido.</div></li>
         </ul>
@@ -495,16 +700,39 @@
 
   <!-- END -->
   <div class="overlay" id="end">
-    <div class="panel">
+    <div class="panel panel-wide">
       <div class="eyebrow" id="endEyebrow">Recorrido finalizado</div>
       <div class="medal" id="endMedal">🏅</div>
-      <h2 id="endTitle">¡Recorrido completo!</h2>
-      <p id="endMsg"></p>
-      <div class="score-big"><span id="endScore">0</span> / 10 platos</div>
-      <div class="rank-final" id="endRank">Rango: Forastero</div>
+      <h2 id="endTitle">¡Recorrido completado!</h2>
+      <div class="story" id="endStory"></div>
+      <div class="end-stats">
+        <div class="score-big"><span id="endScore">0</span> / 10 platos</div>
+        <div class="rank-final" id="endRank">Rango: Forastero</div>
+      </div>
       <div class="actions">
         <button class="btn alt" id="endBook">Ver recetario</button>
-        <button class="btn" id="toMenu">Volver al menú</button>
+        <button class="btn btn-lg" id="toMenu">Volver al menú</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS / CONFIGURACIÓN -->
+  <div class="overlay" id="settings">
+    <div class="panel settings-panel">
+      <div class="eyebrow">Ajustes</div>
+      <h2>⚙️ Configuración</h2>
+      <div class="set-block">
+        <div class="set-label"><span>🔊 Volumen de la música</span><span class="val" id="volVal">50%</span></div>
+        <input type="range" class="slider" id="volRange" min="0" max="100" value="50" />
+        <div class="set-label" style="margin-top:18px"><span>🔔 Efectos de sonido</span><span class="val" id="sfxVal">70%</span></div>
+        <input type="range" class="slider" id="sfxRange" min="0" max="100" value="70" />
+        <div class="actions" style="margin-top:14px">
+          <button class="btn ghost" id="muteBtn">🔇 Silenciar todo</button>
+        </div>
+        <p class="set-note" id="audioNote"></p>
+      </div>
+      <div class="actions">
+        <button class="btn" id="closeSettings">Cerrar</button>
       </div>
     </div>
   </div>
@@ -517,7 +745,7 @@
    ╚══════════════════════════════════════════════════════╝
    Cada campo acepta:
      • una URL  ("https://...")
-     • una ruta relativa ("img/seco.png")  -> coloca el archivo junto al HTML
+     • una ruta relativa ("img/seco.webp")  -> coloca el archivo junto al HTML
      • un data URI en base64 ("data:image/png;base64,....")
    Si dejas un campo VACÍO ("") se usa el dibujo/emoji por defecto.
 
@@ -526,9 +754,8 @@
      Las picanterías y el personaje se dibujan ENCIMA en las posiciones
      definidas en NODES (más abajo). Ajusta NODES para que calcen con tu foto.
    - Por cada plato puedes dar:
-       image      -> foto del plato ya revelado
-       silhouette -> (opcional) imagen de la silueta. Si la dejas vacía y SÍ
-                     pusiste "image", la silueta se genera oscureciendo la foto.
+       image      -> foto del plato (ahora se muestra directamente, sin silueta)
+       silhouette -> (YA NO SE USA) el plato se ve directo; este campo se ignora.
    - El personaje "player.image" se voltea solo al caminar a la izquierda
      si player.flip = true.
    ========================================================= */
@@ -539,6 +766,23 @@ const ASSETS = {
   // --- FONDO DEL MENÚ (imagen de la pantalla de inicio y de "Cómo jugar") ---
   menu: {
     background: ""         // p.ej. "img/fondo-menu.jpg"
+  },
+
+  // --- MÚSICA DE FONDO ---
+  // Formato recomendado: MP3 (el más compatible). También sirve OGG o WAV.
+  audio: {
+    src: "src/msc/fondo.mp3",               // p.ej. "src/musica.mp3"
+    volume: 0.5,           // volumen inicial (0 a 1)
+    autoplay: true         // intentar sonar al primer clic/tecla del jugador
+  },
+
+  // --- EFECTOS DE SONIDO (MP3/OGG/WAV; deja "" para no usar uno) ---
+  sfx: {
+    correct:   "src/sfx/correct.mp3",         // al acertar           p.ej. "src/sfx/acierto.mp3"
+    wrong:     "src/sfx/incorrect.mp3",         // al fallar            p.ej. "src/sfx/error.mp3"
+    doorOpen:  "src/sfx/door_open.mp3",         // al abrir la puerta   p.ej. "src/sfx/puerta_abrir.mp3"
+    doorClose: "src/sfx/door_closed.mp3",         // al cerrar la puerta  p.ej. "src/sfx/puerta_cerrar.mp3"
+    volume: 0.7            // volumen de los efectos (0 a 1)
   },
 
   // --- PICANTERÍAS (una imagen por local, en orden 1..5) ---
@@ -553,7 +797,7 @@ const ASSETS = {
 
   // --- PERSONAJE ---
   player: {
-    image: "",             // p.ej. "img/explorador.png" (PNG con fondo transparente recomendado)
+    image: "",             // p.ej. "img/explorador.webp" (PNG con fondo transparente recomendado)
     width: 46,             // ancho en pantalla
     height: 56,            // alto en pantalla
     flip: true             // voltear horizontalmente al ir a la izquierda
@@ -570,16 +814,16 @@ const ASSETS = {
 
   // --- PLATOS (la clave debe coincidir EXACTO con el nombre del plato) ---
   dishes: {
-    "Seco de Chavelo":            { image:"src/platos/1.png", silhouette:"src/platos/1_n.png" },
-    "Majado de Yuca":             { image:"src/platos/2.png", silhouette:"src/platos/2_n.png" },
-    "Ceviche de Caballa":         { image:"src/platos/3.png", silhouette:"src/platos/3_n.png" },
-    "Ceviche de Conchas Negras":  { image:"src/platos/4.png", silhouette:"src/platos/4_n.png" },
-    "Malarrabia":                 { image:"src/platos/5.png", silhouette:"src/platos/5_n.png" },
-    "Sudado de Pescado":          { image:"src/platos/6.png", silhouette:"src/platos/6_n.png" },
-    "Arroz con Mariscos":         { image:"src/platos/7.png", silhouette:"src/platos/7_n.png" },
-    "Cabrito":                    { image:"src/platos/8.png", silhouette:"src/platos/8_n.png" },
-    "Cachema Encebollada":        { image:"src/platos/9.png", silhouette:"src/platos/9_n.png" },
-    "Pasado por Agua Caliente":   { image:"src/platos/10.png", silhouette:"src/platos/10_n.png" }
+    "Seco de Chavelo":            { image:"src/platos/1.webp", silhouette:"src/platos/1_n.webp" },
+    "Majado de Yuca":             { image:"src/platos/2.webp", silhouette:"src/platos/2_n.webp" },
+    "Ceviche de Caballa":         { image:"src/platos/3.webp", silhouette:"src/platos/3_n.webp" },
+    "Ceviche de Conchas Negras":  { image:"src/platos/4.webp", silhouette:"src/platos/4_n.webp" },
+    "Malarrabia":                 { image:"src/platos/5.webp", silhouette:"src/platos/5_n.webp" },
+    "Sudado de Pescado":          { image:"src/platos/6.webp", silhouette:"src/platos/6_n.webp" },
+    "Arroz con Mariscos":         { image:"src/platos/7.webp", silhouette:"src/platos/7_n.webp" },
+    "Cabrito":                    { image:"src/platos/8.webp", silhouette:"src/platos/8_n.webp" },
+    "Cachema Encebollada":        { image:"src/platos/9.webp", silhouette:"src/platos/9_n.webp" },
+    "Pasado por Agua Caliente":   { image:"src/platos/10.webp", silhouette:"src/platos/10_n.webp" }
   }
 };
 
@@ -634,42 +878,42 @@ const DISHES = [
     fbOk:`¡Muy bien! Has reconocido el Majado de Yuca, una preparación tradicional elaborada con yuca cocida y machacada, generalmente acompañada de chicharrón o carne. Es un plato muy apreciado en la cocina popular piurana por su sencillez y sabor.`,
     fbBad:`¡Gua! La respuesta correcta es Majado de Yuca. Este plato se prepara machacando yuca cocida hasta obtener una textura suave que suele acompañarse con carnes y salsas típicas de la región. También se encuentra dentro de la llamada "Ronda criolla". Probarlo es una buena excusa para conocer más picanterías.`,
     book:`Yuca cocida y machacada, servida con chicharrón o carne; parte de la "Ronda criolla".`,
-    far:["Papa a la Huancaína","Causa Limeña"], near:["Chicharrón con Yuca","Tacacho con Cecina"] },
+    far:["Majado de Plátano","Tacacho con Cecina"], near:["Chicharrón con Yuca","Tacacho con Cecina"] },
 
   { name:"Ceviche de Caballa", emoji:"🐟",
     hints:["Es un plato marino curtido en limón.","Usa un pescado azul de carne oscura y sabor intenso.","Se sirve con cancha, camote y cebolla; el pez es de carne firme y oscura."],
     fbOk:`¡Excelente! Has identificado correctamente el Ceviche de Caballa, un pescado azul reconocido por su intenso sabor y alto valor nutricional. Se prepara con limón, cebolla roja, ají y culantro, ingredientes que realzan su frescura. En distintas regiones del Perú existen versiones con otros pescados como cachema, bonito o mero, pero la caballa destaca por su sabor característico y su importancia en la cocina costera.`,
     fbBad:`¡No te preocupes! El nombre correcto es Ceviche de Caballa. Se reconoce por usar caballa fresca marinada en jugo de limón y acompañada de cebolla, ají y otros ingredientes tradicionales del ceviche peruano. Su carne oscura y sabor intenso lo diferencian de otros ceviches de pescado blanco. Ahora que lo conoces, será mucho más fácil identificarlo la próxima vez.`,
     book:`Pescado azul marinado en limón, de carne oscura y sabor intenso.`,
-    far:["Lomo Saltado","Arroz con Pollo"], near:["Ceviche de Conchas Negras","Tiradito de Pescado"] },
+    far:["Ceviche de Pota","Ceviche de Cangrejo"], near:["Ceviche de Conchas Negras","Tiradito de Pescado"] },
 
   { name:"Ceviche de Conchas Negras", emoji:"🦪",
     hints:["Es un ceviche de intenso sabor marino.","No lleva pescado, sino un molusco de color oscuro.","Ese molusco se extrae de los manglares del norte."],
     fbOk:`¡Correcto! Has identificado el Ceviche de Conchas Negras, uno de los platos más valorados de la gastronomía norteña. Se prepara con conchas negras frescas, limón, cebolla y ají. Su intenso sabor marino lo convierte en una experiencia culinaria única.`,
     fbBad:`Este plato es un Ceviche de Conchas Negras. A diferencia del ceviche tradicional de pescado, utiliza conchas negras, un molusco extraído principalmente de los manglares del norte peruano.`,
     book:`Ceviche de conchas negras de los manglares del norte, de fuerte sabor marino.`,
-    far:["Ají de Gallina","Lomo Saltado"], near:["Ceviche de Caballa","Ceviche Mixto"] },
+    far:["Choritos a la Chalaca","Pulpo al Olivo con Conchas"], near:["Ceviche de Caballa","Ceviche Mixto"] },
 
   { name:"Malarrabia", emoji:"🍌",
     hints:["Es un plato tradicional ligado a fechas religiosas.","Mezcla plátano maduro con queso fresco y cebolla.","Se prepara sobre todo en Semana Santa, en Piura."],
     fbOk:`¡Muy bien! Has reconocido la Malarrabia, un plato tradicional asociado especialmente a la Semana Santa en Piura. Se elabora con plátano maduro, queso fresco y una salsa a base de cebolla. Su nombre tiene diversas interpretaciones populares y representa una importante tradición culinaria de la región.`,
     fbBad:`No exactamente. Este plato es la Malarrabia, una preparación típica piurana hecha principalmente con plátano maduro, queso fresco y aderezo criollo. Es uno de los platos más representativos de la cocina tradicional de Catacaos.`,
     book:`Plátano maduro con queso fresco y salsa de cebolla; tradicional de Semana Santa.`,
-    far:["Tacu Tacu","Causa Limeña"], near:["Tacacho con Cecina","Frito a la Piurana"] },
+    far:["Majado de Yuca","Majado de Plátano"], near:["Tacacho con Cecina","Frito a la Piurana"] },
 
   { name:"Sudado de Pescado", emoji:"🐠",
     hints:["Es un plato marino caliente, de cuchara.","El pescado se cocina al vapor de sus propios jugos.","Lleva tomate, cebolla y especias en un caldo aromático."],
     fbOk:`¡Correcto! El Sudado de Pescado es una preparación muy popular en la costa peruana. Se cocina al vapor de sus propios jugos junto con tomate, cebolla y especias, logrando un caldo lleno de sabor.`,
     fbBad:`La respuesta correcta es Sudado de Pescado. Su principal característica es la cocción lenta del pescado en un caldo aromático elaborado con verduras y condimentos.`,
     book:`Pescado cocido al vapor de sus jugos con tomate y cebolla, de caldo aromático.`,
-    far:["Lomo Saltado","Ají de Gallina"], near:["Pasado por Agua Caliente","Parihuela"] },
+    far:["Pescado al Ají","Pescado Encebollado"], near:["Pasado por Agua Caliente","Parihuela"] },
 
   { name:"Arroz con Mariscos", emoji:"🍤",
     hints:["Es un plato marino festivo y muy popular.","Combina arroz sazonado con una variedad de mariscos.","Lleva calamar, pulpo, conchas y langostinos."],
     fbOk:`¡Muy bien! Has reconocido el Arroz con Mariscos. Esta preparación combina arroz sazonado con una variedad de mariscos como calamar, pulpo, conchas, langostinos y choros, junto con ajíes, culantro y especias que le aportan su característico color y sabor.`,
     fbBad:`¡Buen intento! Pero la respuesta correcta es Arroz con Mariscos. Se distingue por su color intenso y la abundante mezcla de mariscos incorporados al arroz durante la cocción. Es una de las preparaciones más populares de la cocina marina peruana y suele servirse con salsa criolla o limón.`,
     book:`Arroz sazonado con calamar, pulpo, conchas y langostinos; color y sabor intensos.`,
-    far:["Lomo Saltado","Ají de Gallina"], near:["Arroz con Pato","Chaufa de Mariscos"] },
+    far:["Lomo Saltado","Ají de Gallina"], near:["Salteado de Mariscos","Chaufa de Mariscos"] },
 
   { name:"Cabrito", emoji:"🍛",
     hints:["Es un plato de fiesta del norte peruano.","Su carne se cocina marinada y a fuego lento.","Lleva chicha de jora y culantro; tiene un color verdoso."],
@@ -690,7 +934,7 @@ const DISHES = [
     fbOk:`¡Excelente! Has identificado correctamente el Pasado por Agua Caliente, uno de los platos más tradicionales de la gastronomía piurana. Consiste en pescado cocido en un caldo ligero y aromático con cebolla, tomate, ají y especias. Es apreciado por resaltar el sabor natural del pescado y por formar parte de la cocina cotidiana de las familias costeras.`,
     fbBad:`¡Buen intento! La respuesta correcta es Pasado por Agua Caliente. Este plato piurano usa pescado cocido en un caldo caliente con ingredientes frescos y condimentos locales. Puede confundirse con el sudado o el ceviche, pero se diferencia porque su protagonista es el caldo ligero que acompaña al pescado, sin la acidez del limón ni salsas concentradas.`,
     book:`Pescado cocido en caldo ligero con cebolla y ají, sin acidez de limón.`,
-    far:["Lomo Saltado","Ají de Gallina"], near:["Sudado de Pescado","Caldo de Bolas"] },
+    far:["Lomo Saltado","Ají de Gallina"], near:["Sudado de Pescado","Tiradito de Pescado"] },
 ];
 
 const PICANTERIAS = [
@@ -796,17 +1040,92 @@ function tryInteract(){
 function $(id){ return document.getElementById(id); }
 function showOverlay(id){ $(id).classList.add('show'); overlayOpen=true; }
 function hideOverlay(id){ $(id).classList.remove('show'); overlayOpen = anyOverlayOpen(); }
-function anyOverlayOpen(){ return ['menu','intro','howto','challenge','book','end'].some(o=>$(o).classList.contains('show')); }
+function anyOverlayOpen(){ return ['menu','intro','howto','challenge','book','end','settings'].some(o=>$(o).classList.contains('show')); }
 
-$('startBtn').onclick = ()=>{ hideOverlay('menu'); showOverlay('intro'); };
-$('startGameBtn').onclick = ()=>{ hideOverlay('intro'); game.screen='playing'; overlayOpen=false; updateHUD(); };
-$('introBack').onclick = ()=>{ hideOverlay('intro'); showOverlay('menu'); };
+$('introContinue').onclick = ()=>{ hideOverlay('intro'); showOverlay('menu'); };
+$('startBtn').onclick = ()=>{ hideOverlay('menu'); game.screen='playing'; overlayOpen=false; updateHUD(); ensureMusic(); };
 $('howtoBtn').onclick = ()=>{ hideOverlay('menu'); showOverlay('howto'); };
 $('howtoBack').onclick = ()=>{ hideOverlay('howto'); showOverlay('menu'); };
 $('bookBtn').onclick = toggleBook;
 $('closeBook').onclick = ()=>{ hideOverlay('book'); };
 $('endBook').onclick = ()=>{ renderBook(); showOverlay('book'); };
 $('toMenu').onclick = ()=>{ hideOverlay('end'); newGame(); showOverlay('menu'); };
+
+/* ---------- Ajustes / música de fondo ---------- */
+const bgm = $('bgm');
+let musicStarted = false, isMuted = false, curVol = 0.5;
+
+/* Pinta el relleno del slider según su valor (variable CSS --p) */
+function paintRange(el){ if(el) el.style.setProperty('--p', el.value); }
+
+function initAudio(){
+  const a = ASSETS.audio || {};
+  curVol = (typeof a.volume === 'number') ? Math.min(1, Math.max(0, a.volume)) : 0.5;
+  if(a.src) bgm.src = a.src;
+  bgm.loop = true;
+  bgm.volume = curVol;
+  $('volRange').value = Math.round(curVol*100);
+  $('volVal').textContent = Math.round(curVol*100)+'%';
+  paintRange($('volRange'));
+  $('audioNote').textContent = a.src ? '' : 'No hay música configurada (ASSETS.audio.src está vacío).';
+}
+function ensureMusic(){
+  const a = ASSETS.audio || {};
+  if(!a.src || musicStarted || isMuted) return;
+  const p = bgm.play();
+  if(p && p.catch) p.catch(()=>{ /* el navegador puede exigir interacción */ });
+  musicStarted = true;
+}
+function applyVolume(){
+  bgm.volume = isMuted ? 0 : curVol;
+  $('volRange').value = Math.round(curVol*100);
+  $('volVal').textContent = (isMuted ? 0 : Math.round(curVol*100))+'%';
+  paintRange($('volRange'));
+  $('muteBtn').textContent = isMuted ? '🔊 Activar sonido' : '🔇 Silenciar todo';
+}
+$('volRange').oninput = (e)=>{ curVol = (+e.target.value)/100; if(curVol>0) isMuted=false; paintRange(e.target); applyVolume(); ensureMusic(); };
+$('muteBtn').onclick = ()=>{ isMuted = !isMuted; applyVolume(); if(!isMuted) ensureMusic(); };
+$('settingsBtnMenu').onclick = ()=>{ showOverlay('settings'); };
+$('settingsBtnHud').onclick = ()=>{ showOverlay('settings'); };
+$('closeSettings').onclick = ()=>{ hideOverlay('settings'); };
+
+/* ---------- Efectos de sonido (SFX) ---------- */
+const SFX = {};
+let sfxVol = 0.7;
+function initSfx(){
+  const s = ASSETS.sfx || {};
+  sfxVol = (typeof s.volume === 'number') ? Math.min(1, Math.max(0, s.volume)) : 0.7;
+  ['correct','wrong','doorOpen','doorClose'].forEach(k=>{
+    if(s[k]){ const a = new Audio(s[k]); a.preload='auto'; a.volume=sfxVol; SFX[k]=a; }
+  });
+  $('sfxRange').value = Math.round(sfxVol*100);
+  $('sfxVal').textContent = Math.round(sfxVol*100)+'%';
+  paintRange($('sfxRange'));
+}
+function playSfx(name){
+  if(isMuted) return;
+  const base = SFX[name];
+  if(!base) return;
+  try{
+    const a = base.cloneNode(true);   // clon para permitir solapamiento/retrigger
+    a.volume = sfxVol;
+    const p = a.play();
+    if(p && p.catch) p.catch(()=>{});
+  }catch(e){}
+}
+$('sfxRange').oninput = (e)=>{ sfxVol = (+e.target.value)/100; if(sfxVol>0) isMuted=false; paintRange(e.target); $('sfxVal').textContent = Math.round(sfxVol*100)+'%'; applyVolume(); };
+$('sfxRange').onchange = ()=>{ playSfx('correct'); };  // pequeña muestra al soltar
+initSfx();
+
+initAudio();
+// arrancar la música en la primera interacción del usuario (política de autoplay)
+function _firstGesture(){
+  if(ASSETS.audio && ASSETS.audio.autoplay) ensureMusic();
+  window.removeEventListener('pointerdown', _firstGesture);
+  window.removeEventListener('keydown', _firstGesture);
+}
+window.addEventListener('pointerdown', _firstGesture);
+window.addEventListener('keydown', _firstGesture);
 
 function applyMenuBackground(){
   const bg = ASSETS.menu && ASSETS.menu.background;
@@ -819,6 +1138,130 @@ function applyMenuBackground(){
   });
 }
 applyMenuBackground();
+
+/* =========================================================
+   PRECARGA DE RECURSOS + PANTALLA DE CARGA
+   Recoge todas las imágenes y sonidos definidos en ASSETS,
+   los carga en segundo plano y muestra el progreso real.
+   ========================================================= */
+(function preloadAssets(){
+  const loaderEl = $('loader');
+  if(!loaderEl) return;
+
+  // 1) Reunir todas las URLs (sin duplicados)
+  const imgUrls = new Set(), audUrls = new Set();
+  if(ASSETS.map) imgUrls.add(ASSETS.map);
+  if(ASSETS.menu && ASSETS.menu.background) imgUrls.add(ASSETS.menu.background);
+  (ASSETS.picanterias||[]).forEach(p=>{ if(p && p.image) imgUrls.add(p.image); });
+  if(ASSETS.player && ASSETS.player.image) imgUrls.add(ASSETS.player.image);
+  if(ASSETS.suspense && ASSETS.suspense.gif) imgUrls.add(ASSETS.suspense.gif);
+  Object.values(ASSETS.dishes||{}).forEach(d=>{
+    if(d && d.image) imgUrls.add(d.image);
+    if(d && d.silhouette) imgUrls.add(d.silhouette);
+  });
+  if(ASSETS.audio && ASSETS.audio.src) audUrls.add(ASSETS.audio.src);
+  const sfx = ASSETS.sfx || {};
+  ['correct','wrong','doorOpen','doorClose'].forEach(k=>{ if(sfx[k]) audUrls.add(sfx[k]); });
+
+  const images = [...imgUrls], audios = [...audUrls];
+  const total = images.length + audios.length;
+
+  // Elementos de la UI del loader
+  const fillEl   = $('loaderFill');
+  const pctEl    = $('loaderPct');
+  const statusEl = $('loaderStatus');
+
+  let loaded = 0;
+  let shownPct = 0;          // porcentaje mostrado (se anima suave hacia el real)
+  const startTime = Date.now();
+  const MIN_TIME  = 1100;    // tiempo mínimo visible (ms) para que se vea la animación
+  const MAX_TIME  = 14000;   // por seguridad, no bloquear nunca el juego
+  let finished = false;
+
+  const phrases = [
+    'Cargando sabores…',
+    'Encendiendo los fogones…',
+    'Majando el plátano verde…',
+    'Sirviendo la chicha…',
+    'Abriendo las picanterías…'
+  ];
+  let phraseIdx = 0;
+  const phraseTimer = setInterval(()=>{
+    if(statusEl){ phraseIdx = (phraseIdx+1) % phrases.length; statusEl.textContent = phrases[phraseIdx]; }
+  }, 1400);
+
+  function targetPct(){ return total === 0 ? 100 : Math.round((loaded/total)*100); }
+
+  // Animación suave del porcentaje y la barra
+  function tick(){
+    const target = targetPct();
+    if(shownPct < target) shownPct = Math.min(target, shownPct + Math.max(1, (target-shownPct)*0.18));
+    const p = Math.round(shownPct);
+    if(fillEl) fillEl.style.width = p + '%';
+    if(pctEl)  pctEl.textContent = p + '%';
+    if(!finished) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  function bump(){ loaded++; maybeFinish(); }
+
+  function maybeFinish(){
+    if(finished) return;
+    const elapsed = Date.now() - startTime;
+    const ready = (total === 0) || (loaded >= total);
+    if(ready && elapsed >= MIN_TIME){ doFinish(); }
+    else if(ready){ setTimeout(maybeFinish, MIN_TIME - elapsed + 30); }
+  }
+
+  function doFinish(){
+    if(finished) return;
+    finished = true;
+    clearInterval(phraseTimer);
+    // asegurar que la barra llegue al 100% antes de desaparecer
+    shownPct = 100;
+    if(fillEl) fillEl.style.width = '100%';
+    if(pctEl)  pctEl.textContent = '100%';
+    if(statusEl) statusEl.textContent = '¡Listo! 🌶️';
+    setTimeout(()=>{
+      loaderEl.classList.add('done');
+      // revelar la primera pantalla con su animación
+      showOverlay('intro');
+    }, 420);
+  }
+
+  // 2) Cargar imágenes (poblando _imgCache para que el juego las reutilice)
+  images.forEach(src=>{
+    const im = new Image();
+    let settled = false;
+    const done = ()=>{ if(settled) return; settled = true; bump(); };
+    im.onload  = ()=>{ _imgCache[src] = im; done(); };
+    im.onerror = ()=>{ console.warn('No se pudo cargar la imagen:', src); _imgCache[src] = null; done(); };
+    im.src = src;
+    _imgCache[src] = im; // disponible de inmediato (se completa al cargar)
+    if(im.complete && im.naturalWidth > 0){ _imgCache[src] = im; done(); }
+  });
+
+  // 3) Calentar la caché de sonidos (el navegario los reutiliza al reproducirlos)
+  audios.forEach(src=>{
+    let settled = false;
+    const done = ()=>{ if(settled) return; settled = true; bump(); };
+    try{
+      const a = new Audio();
+      a.preload = 'auto';
+      a.addEventListener('canplaythrough', done, {once:true});
+      a.addEventListener('loadeddata',     done, {once:true});
+      a.addEventListener('error',          done, {once:true});
+      a.src = src;
+      a.load();
+      setTimeout(done, 7000); // por si el evento no llega en este navegador
+    }catch(e){ done(); }
+  });
+
+  // 4) Si no hay nada que cargar, igual respetar el tiempo mínimo
+  if(total === 0) maybeFinish();
+  // 5) Salvavidas: nunca dejar la pantalla de carga colgada
+  setTimeout(doFinish, MAX_TIME);
+})();
 
 function toggleBook(){
   if($('book').classList.contains('show')){ hideOverlay('book'); return; }
@@ -889,6 +1332,7 @@ function doorsReveal(){
   const d=_doors(); d.classList.add('active');
   _setDoors('0%','0%','none');             // cerradas (cubren)
   void d.offsetWidth;                       // forzar reflow
+  playSfx('doorOpen');
   _setDoors('-101%','101%','transform .6s cubic-bezier(.55,0,.4,1)'); // abrir
   setTimeout(()=>d.classList.remove('active'), 640);
 }
@@ -896,6 +1340,7 @@ function doorsClose(cb){
   const d=_doors(); d.classList.add('active');
   _setDoors('-101%','101%','none');         // empiezan abiertas
   void d.offsetWidth;
+  playSfx('doorClose');
   _setDoors('0%','0%','transform .42s ease-in'); // cerrar (cubrir)
   setTimeout(()=>{
     if(cb) cb();                            // cambiar pantalla bajo las puertas
@@ -936,19 +1381,17 @@ function renderRound(){
   challenge.dish=dish;
   $('chalStep').textContent = `Plato ${challenge.step+1} de 2`;
 
-  // plato en silueta (imagen si existe, si no emoji)
+  // plato visible directamente (sin silueta)
   const emojiEl=$('plate'), imgEl=$('plateImg');
   const media=dishMedia(dish.name);
   emojiEl.classList.remove('revealed','silhouette');
   imgEl.classList.remove('revealed','silhouette');
   if(media.image){
     imgEl.style.display='block'; emojiEl.style.display='none';
-    if(media.silhouette){ imgEl.src=media.silhouette; }
-    else { imgEl.src=media.image; imgEl.classList.add('silhouette'); }
+    imgEl.src=media.image;
   } else {
     emojiEl.style.display=''; imgEl.style.display='none';
     emojiEl.textContent=dish.emoji;
-    emojiEl.classList.add('silhouette');
   }
   $('revealBadge').style.display='none';
 
@@ -1046,17 +1489,7 @@ function revealResult(){
   });
   if(!correct && challenge.selectedBtn) challenge.selectedBtn.classList.add('wrong');
 
-  // revelar plato (imagen o emoji)
-  const emojiEl=$('plate'), imgEl=$('plateImg');
-  const media=dishMedia(dish.name);
-  if(media.image){
-    imgEl.src=media.image;
-    imgEl.classList.remove('silhouette');
-    imgEl.classList.add('revealed');
-  } else {
-    emojiEl.classList.remove('silhouette');
-    emojiEl.classList.add('revealed');
-  }
+  // el plato ya está visible; solo mostramos el sello de resultado
   const badge=$('revealBadge');
   badge.textContent = correct ? '✅' : '📘';
   badge.style.display='block';
@@ -1082,8 +1515,9 @@ function revealResult(){
   `;
   $('feedback').classList.add('show');
 
-  // ¡celebración!
-  if(correct) celebrate();
+  // ¡celebración! + efecto de sonido
+  if(correct){ celebrate(); playSfx('correct'); }
+  else { playSfx('wrong'); }
 }
 
 $('submitBtn').onclick = submitAnswer;
@@ -1154,13 +1588,20 @@ function endGame(reason){
   $('endRank').textContent='Rango: '+rankFor(a);
   $('endMedal').textContent=medalFor(a);
   if(reason==='completo'){
-    $('endEyebrow').textContent='Recorrido completo';
-    $('endTitle').textContent='¡Recorriste toda la Plaza!';
-    $('endMsg').textContent='Visitaste las 5 picanterías de Catacaos. Este es tu reconocimiento gastronómico:';
+    $('endEyebrow').textContent='Recorrido finalizado';
+    $('endTitle').textContent='¡Recorrido completado!';
+    $('endStory').innerHTML = `
+      <p>A lo largo de este viaje conociste algunos de los sabores más representativos de Catacaos, pero también descubriste algo más importante: las picanterías son espacios donde se preservan costumbres, recuerdos y formas de vida que han pasado de generación en generación.</p>
+      <p>Detrás de cada plato existe una historia, una familia y una tradición que continúa reuniendo a las personas alrededor de una misma mesa.</p>
+      <p>Gracias por recorrer estos caminos de sabor y cultura. Ahora formas parte de quienes ayudan a mantener viva la herencia de las picanterías cataquenses.</p>
+      <p class="story-foot" style="margin-top:8px">🏺 La tradición sigue encendida.</p>`;
   } else {
     $('endEyebrow').textContent='Se acabaron las vidas';
     $('endTitle').textContent='¡Hasta aquí el recorrido!';
-    $('endMsg').textContent='Superaste los 5 errores permitidos, pero te llevas estos sabores aprendidos:';
+    $('endStory').innerHTML = `
+      <p>Superaste los 5 errores permitidos, pero te llevas contigo varios sabores aprendidos de la cocina cataquense.</p>
+      <p>Las picanterías de Catacaos seguirán ahí, guardando sus historias. Puedes volver a recorrerlas cuando quieras y descubrir lo que te faltó probar.</p>
+      <p class="story-foot" style="margin-top:8px">🌶️ ¡Vuelve pronto, la mesa te espera!</p>`;
   }
   showOverlay('end');
 }
